@@ -1,0 +1,15 @@
+footer {
+  font-family: 'Poppins', sans-serif;
+}
+
+footer a:hover {
+  color: #0d6efd !important; /* Bootstrap primary color */
+}
+
+footer input.form-control {
+  border-radius: 0;
+}
+
+footer button.btn-primary {
+  border-radius: 0;
+}

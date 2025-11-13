@@ -1,0 +1,40 @@
+/* General */
+body {
+  scroll-behavior: smooth;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Hero Section */
+.hero {
+  position: relative;
+  background-color: rgba(0, 0, 0, 0.5);
+  background-blend-mode: overlay;
+}
+
+.hero h1, .hero p {
+  color: #fff;
+}
+
+.hero .btn-primary {
+  background-color: #007bff;
+  border: none;
+}
+
+.hero .btn-outline-light:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+/* About Section */
+#about p {
+  font-size: 1rem;
+  color: #555;
+}
+
+/* Footer */
+footer p, footer a {
+  color: #bbb;
+}
+footer a:hover {
+  color: #fff;
+}
