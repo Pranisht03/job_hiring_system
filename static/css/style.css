@@ -6,10 +6,19 @@ body {
 
 /* Hero Section */
 .hero {
+  background-image: url("../images/hero.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  height: 100vh;
   position: relative;
+
+  /* Dark overlay effect */
   background-color: rgba(0, 0, 0, 0.5);
   background-blend-mode: overlay;
 }
+
 
 .hero h1, .hero p {
   color: #fff;
