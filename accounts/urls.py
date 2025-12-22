@@ -1,9 +1,21 @@
 from django.urls import path
 from . import views
-from .views import RegisterAPI  
+
+app_name = "accounts"
 
 urlpatterns = [
-    # path('login/', views.login_view, name='login'),
-    # path('signup/', views.signup_view, name='signup'),
-    path('register/', RegisterAPI.as_view(), name='register'),
+    # Login page
+    path("login/", views.login_view, name="login"),
+
+    # Choose account type page
+    path("signup/", views.choose_signup, name="signup"),
+
+    # Jobseeker signup page
+    path("register/jobseeker/", views.jobseeker_signup_page, name="jobseeker_signup"),
+
+    # Company signup page
+    path("register/company/", views.company_signup_page, name="company_signup"),
+
+    path("jobseeker_dashboard/", views.jobseeker_dashboard, name="jobseeker-dashboard"),
+    path("company_dashboard/", views.company_dashboard, name="company-dashboard"),
 ]

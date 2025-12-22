@@ -1,0 +1,95 @@
+{% load static %}
+
+{% include 'includes/navbar.html' %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg rounded-3">
+                <div class="card-body p-5">
+                    <h2 class="text-center mb-2 fw-bold">Company Signup</h2>
+                    <p class="text-center text-muted mb-4">Register your company to get started</p>
+
+                    {% if messages %}
+                    <div class="mb-3">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <form method="POST" action="/api/register/company/" onsubmit="return validateCompanyForm()">
+                        {% csrf_token %}
+
+                        <!-- Company Name -->
+                        <div class="mb-3"> <label class="form-label">Company Name:</label>
+                        <input type="text" class="form-control" id="companyName" name="company_name" required>
+                        </div>
+
+                        <!-- Company Email -->
+                         <div class="mb-3"> <label class="form-label">Company Email:</label>
+                        <input type="email" class="form-control" id="companyEmail" name="email" required>
+                         </div>
+
+                        <!-- Password -->
+                         <div class="mb-3"> <label class="form-label">Password:</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                         </div>
+
+                        <!-- Confirm Password -->
+                         <div class="mb-3"> <label class="form-label">Confirm Password:</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirm_password" required>
+                         </div>
+
+                        <button type="submit" class="btn btn-dark w-100">Create Company Account</button>
+                    </form>
+
+
+                    <p class="text-center mt-3">
+                        Already have an account? 
+                        <a href="{% url 'accounts:login' %}">Sign in</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function validateCompanyForm() {
+    let password = document.getElementById("password").value;
+    let confirmPassword = document.getElementById("confirmPassword").value;
+
+    let passwordError = document.getElementById("passwordError");
+    let confirmError = document.getElementById("confirmError");
+
+    // Hide errors initially
+    passwordError.classList.add("d-none");
+    confirmError.classList.add("d-none");
+
+    // Strong password validation
+    let passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
+    if (!passwordPattern.test(password)) {
+        passwordError.classList.remove("d-none");
+        return false;
+    }
+
+    // Confirm password match
+    if (password !== confirmPassword) {
+        confirmError.classList.remove("d-none");
+        return false;
+    }
+
+    return true;
+}
+</script>
+
+{% include 'includes/footer.html' %}
+{% endblock %}
+
+<!-- Bootstrap CSS & JS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

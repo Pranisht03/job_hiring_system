@@ -15,17 +15,16 @@
     <div class="collapse navbar-collapse" id="navbarContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
         <li class="nav-item"><a class="nav-link" href="#categories">Jobs</a></li>
-        <li class="nav-item"><a class="nav-link" href="#testimonials">Testimonials</a></li>
+        <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
         <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
       </ul>
 
       <!-- Login/Signup buttons -->
       <div class="d-flex">
-        <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Login</a>
-        <a href="{% url 'signup' %}" class="btn btn-primary">Sign Up</a>
-      </div>
+       <a href="{% url 'accounts:login' %}" class="btn btn-outline-light me-2">Login</a>
+       <a href="{% url 'accounts:signup' %}" class="btn btn-primary">Sign Up</a>
+      </div> 
     </div>
   </div>
 </nav>

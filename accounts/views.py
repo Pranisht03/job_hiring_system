@@ -1,19 +1,27 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status  # <-- Missing import
-from .serializers import RegisterSerializer  # <-- Missing import
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required 
 
+def login_view(request):
+    return render(request, "accounts/login.html")
 
-class RegisterAPI(APIView):
+def choose_signup(request):
+    return render(request, "accounts/signup.html")
 
-    def post(self, request):
-        serializer = RegisterSerializer(data=request.data)
+def jobseeker_signup_page(request):
+    return render(request, "accounts/signup_jobseeker.html")
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response({
-                "message": "User registered successfully!",
-                "data": serializer.data
-            }, status=status.HTTP_201_CREATED)
+def company_signup_page(request):
+    return render(request, "accounts/signup_company.html")
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+def jobseeker_dashboard(request):
+    if not request.user.is_job_seeker:
+        # Optional: redirect if user is not a jobseeker
+        return redirect('accounts:login')
+    return render(request, "jobseeker_dashboard.html")
+
+@login_required
+def company_dashboard(request):
+    if not request.user.is_company:
+        # Optional: redirect if user is not a company
+        return redirect('accounts:login')
+    return render(request, "company_dashboard.html")
