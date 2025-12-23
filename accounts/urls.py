@@ -7,6 +7,8 @@ urlpatterns = [
     # Login page
     path("login/", views.login_view, name="login"),
 
+    path('logout/', views.logout_view, name='logout'),
+
     # Choose account type page
     path("signup/", views.choose_signup, name="signup"),
 
@@ -18,4 +20,7 @@ urlpatterns = [
 
     path("jobseeker_dashboard/", views.jobseeker_dashboard, name="jobseeker-dashboard"),
     path("company_dashboard/", views.company_dashboard, name="company-dashboard"),
+
+    path('jobseeker/profile/', views.jobseeker_profile, name='jobseeker_profile'),
+    path('company/profile/', views.company_profile, name='company_profile'),
 ]
