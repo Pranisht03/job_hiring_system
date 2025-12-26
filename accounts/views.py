@@ -54,7 +54,7 @@ def jobseeker_profile(request):
 
 @login_required
 def company_profile(request):
-    if not request.user.is_employer:
+    if not request.user.is_company:
         return redirect('home')
 
     return render(request, 'accounts/company_profile.html')

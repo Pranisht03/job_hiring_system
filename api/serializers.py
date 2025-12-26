@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from accounts.models import CustomUser
+from accounts.models import JobSeekerProfile
 
 class JobSeekerRegisterSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)
@@ -57,3 +58,9 @@ class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
     user_type = serializers.ChoiceField(choices=[('jobseeker', 'Job Seeker'), ('company', 'Company')])
+
+class JobSeekerProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobSeekerProfile
+        exclude = ['user'] 
+
