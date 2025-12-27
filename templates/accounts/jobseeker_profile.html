@@ -61,28 +61,28 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="phone">Phone</label>
-                        <input type="text" class="form-control" id="phone" name="phone">
+                        <input type="text" class="form-control" id="phone" name="phone" required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="location">Location</label>
-                        <input type="text" class="form-control" id="location" name="location">
+                        <input type="text" class="form-control" id="location" name="location" required>
                     </div>
                 </div>
 
                 <div class="mb-3">
                     <label for="bio">Bio</label>
-                    <textarea class="form-control" rows="3" id="bio" name="bio"></textarea>
+                    <textarea class="form-control" rows="3" id="bio" name="bio" required></textarea>
                 </div>
 
                 <div class="mb-3">
                     <label for="skills">Skills (comma separated)</label>
-                    <input type="text" class="form-control" id="skills" name="skills">
+                    <input type="text" class="form-control" id="skills" name="skills" required>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="education">Education</label>
-                        <input type="text" class="form-control" id="education" name="education">
+                        <input type="text" class="form-control" id="education" name="education" required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="experience_level">Experience Level</label>
@@ -97,7 +97,7 @@
 
                 <div class="mb-3">
                     <label for="years_of_experience">Years of Experience</label>
-                    <input type="number" class="form-control" id="years_of_experience" name="years_of_experience" min="0">
+                    <input type="number" class="form-control" id="years_of_experience" name="years_of_experience" min="0" required>
                 </div>
 
                 <div class="row">
@@ -124,11 +124,16 @@
 <script>
 let profileExists = false;
 
-// Toggle Edit Mode
+// CSRF helper
+function getCSRFToken() {
+    return document.querySelector('[name=csrfmiddlewaretoken]').value;
+}
+
+// Enable Edit Mode
 function enableEdit() {
     document.getElementById('view-mode').style.display = 'none';
     document.getElementById('edit-mode').style.display = 'block';
-    document.getElementById('form-title').innerText = "Edit Profile";
+    document.getElementById('form-title').innerText = profileExists ? "Edit Profile" : "Complete Your Profile";
 }
 
 // Cancel Edit
@@ -136,41 +141,41 @@ function cancelEdit() {
     if(profileExists){
         document.getElementById('edit-mode').style.display = 'none';
         document.getElementById('view-mode').style.display = 'block';
+    } else {
+        document.getElementById('profile-form').reset();
     }
 }
 
-// Helper to get CSRF token
-function getCSRFToken() {
-    return document.querySelector('[name=csrfmiddlewaretoken]').value;
-}
-
-// Load profile on page load
-document.addEventListener("DOMContentLoaded", async function() {
-    const csrftoken = getCSRFToken();
+// Load profile
+async function loadProfile() {
     try {
         const res = await fetch('/api/jobseeker/profile/', {
             method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken
-            },
-            credentials: 'same-origin'  // Important for session auth
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin'
         });
-
         const data = await res.json();
 
         if(data.exists){
             profileExists = true;
+            const profile = data.profile;
+
             document.getElementById('view-mode').style.display = 'block';
             document.getElementById('edit-mode').style.display = 'none';
 
-            const profile = data.profile;
+            // View mode
             document.getElementById('v-name').innerText = profile.full_name;
             document.getElementById('v-email').innerText = "{{ request.user.email }}";
             document.getElementById('v-phone').innerText = profile.phone || '';
             document.getElementById('v-location').innerText = profile.location || '';
             document.getElementById('v-bio').innerText = profile.bio || '';
+            document.getElementById('v-education').innerText = profile.education || '';
+            document.getElementById('v-exp-level').innerText = profile.experience_level || '';
+            document.getElementById('v-exp-years').innerText = profile.years_of_experience || 0;
+            document.getElementById('v-linkedin').href = profile.linkedin || '#';
+            document.getElementById('v-github').href = profile.github || '#';
 
+            // Skills badges
             const skillsDiv = document.getElementById('v-skills');
             skillsDiv.innerHTML = '';
             profile.skills?.split(',').forEach(skill => {
@@ -179,12 +184,6 @@ document.addEventListener("DOMContentLoaded", async function() {
                 span.innerText = skill.trim();
                 skillsDiv.appendChild(span);
             });
-
-            document.getElementById('v-education').innerText = profile.education || '';
-            document.getElementById('v-exp-level').innerText = profile.experience_level || '';
-            document.getElementById('v-exp-years').innerText = profile.years_of_experience || 0;
-            document.getElementById('v-linkedin').href = profile.linkedin || '#';
-            document.getElementById('v-github').href = profile.github || '#';
 
             // Pre-fill edit form
             document.getElementById('full_name').value = profile.full_name;
@@ -198,7 +197,6 @@ document.addEventListener("DOMContentLoaded", async function() {
             document.getElementById('years_of_experience').value = profile.years_of_experience || 0;
             document.getElementById('linkedin').value = profile.linkedin || '';
             document.getElementById('github').value = profile.github || '';
-
         } else {
             profileExists = false;
             document.getElementById('edit-mode').style.display = 'block';
@@ -206,14 +204,13 @@ document.addEventListener("DOMContentLoaded", async function() {
             document.getElementById('form-title').innerText = "Complete Your Profile";
             document.getElementById('email').value = "{{ request.user.email }}";
         }
-    } catch(err) {
-        console.error("Error fetching profile:", err);
+    } catch(err){
+        console.error("Error loading profile:", err);
     }
-});
+}
 
-// Save profile to backend
-async function saveProfile(){
-    const csrftoken = getCSRFToken();
+// Save profile
+async function saveProfile() {
     const payload = {
         full_name: document.getElementById('full_name').value,
         phone: document.getElementById('phone').value,
@@ -222,8 +219,8 @@ async function saveProfile(){
         skills: document.getElementById('skills').value,
         education: document.getElementById('education').value,
         experience_level: document.getElementById('experience_level').value,
-        years_of_experience: document.getElementById('years_of_experience').value,
-        linkedin: document.getElementById('linkedin').value,
+        years_of_experience: parseInt(document.getElementById('years_of_experience').value) || 0,
+        linkedin: document.getElementById('linkedin').value.startsWith('http') ? document.getElementById('linkedin').value : 'https://' + document.getElementById('linkedin').value,
         github: document.getElementById('github').value
     };
 
@@ -232,28 +229,54 @@ async function saveProfile(){
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken
+                'X-CSRFToken': getCSRFToken()
             },
             body: JSON.stringify(payload),
-            credentials: 'same-origin' // Important for session auth
+            credentials: 'same-origin'
         });
 
         const data = await res.json();
 
         if(data.success){
-            alert('Profile saved successfully!');
-            location.reload();
+            profileExists = true;
+
+            // Update view-mode dynamically
+            document.getElementById('view-mode').style.display = 'block';
+            document.getElementById('edit-mode').style.display = 'none';
+            document.getElementById('v-name').innerText = payload.full_name;
+            document.getElementById('v-phone').innerText = payload.phone;
+            document.getElementById('v-location').innerText = payload.location;
+            document.getElementById('v-bio').innerText = payload.bio;
+            document.getElementById('v-education').innerText = payload.education;
+            document.getElementById('v-exp-level').innerText = payload.experience_level;
+            document.getElementById('v-exp-years').innerText = payload.years_of_experience;
+            document.getElementById('v-linkedin').href = payload.linkedin || '#';
+            document.getElementById('v-github').href = payload.github || '#';
+
+            // Update skills badges
+            const skillsDiv = document.getElementById('v-skills');
+            skillsDiv.innerHTML = '';
+            payload.skills.split(',').forEach(skill => {
+                const span = document.createElement('span');
+                span.className = 'badge bg-primary me-1';
+                span.innerText = skill.trim();
+                skillsDiv.appendChild(span);
+            });
+
+            alert("Profile saved successfully!");
         } else {
             console.error("Backend error:", data);
-            alert('Error saving profile: check console for details.');
+            alert("Error saving profile. Check console for details.");
         }
-    } catch(err) {
-        console.error("Fetch error:", err);
-        alert('Error saving profile: network or server issue.');
+    } catch(err){
+        console.error("Network error:", err);
+        alert("Network/server error while saving profile.");
     }
 }
-</script>
 
+// Initialize
+document.addEventListener("DOMContentLoaded", loadProfile);
+</script>
 
 <style>
 .profile-card {

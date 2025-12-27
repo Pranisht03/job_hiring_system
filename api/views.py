@@ -1,4 +1,4 @@
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import JobSeekerRegisterSerializer, CompanyRegisterSerializer
@@ -10,6 +10,7 @@ from rest_framework import status
 from accounts.models import JobSeekerProfile
 from .serializers import JobSeekerProfileSerializer
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.authentication import SessionAuthentication
 
 
 @api_view(['POST'])
@@ -70,8 +71,10 @@ def login_user(request):
 
 
 # GET jobseeker profile
+@csrf_exempt
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
+@authentication_classes([SessionAuthentication])
 def get_jobseeker_profile(request):
     try:
         profile = JobSeekerProfile.objects.get(user=request.user)
@@ -81,8 +84,10 @@ def get_jobseeker_profile(request):
         return Response({"exists": False})
 
 # POST create / update profile
+@csrf_exempt
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@authentication_classes([SessionAuthentication])
 def save_jobseeker_profile(request):
     try:
         profile = JobSeekerProfile.objects.get(user=request.user)

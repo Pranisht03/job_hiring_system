@@ -62,5 +62,6 @@ class LoginSerializer(serializers.Serializer):
 class JobSeekerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobSeekerProfile
-        exclude = ['user'] 
+        fields = '__all__'
+        read_only_fields = ['user']
 
