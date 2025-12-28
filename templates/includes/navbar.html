@@ -40,6 +40,9 @@
 
           <!-- ================= COMPANY ================= -->
           {% if user.is_company %}
+           <li class="nav-item">
+              <a class="nav-link" href="{% url 'jobs:post_job' %}">Post Job</a>
+            </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'accounts:company_profile' %}">Company Profile</a>
             </li>
