@@ -1,6 +1,84 @@
 {% extends 'base.html' %}
 
+{% block title %}Contact Us - Job Hiring System{% endblock %}
+
 {% block content %}
-<h1>Contact Page</h1>
-<p>Welcome to JobHire!</p>
+<!-- Header Section -->
+<header>
+    <div class="container">
+        <h1>Contact Us</h1>
+        <p class="lead">We'd love to hear from you! Reach out for any queries or support.</p>
+    </div>
+</header>
+
+<!-- Contact Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Contact Information -->
+            <div class="col-md-5 mb-4">
+                <h3>Our Contact Info</h3>
+                <p>Feel free to reach out to us via email, phone, or visit our office.</p>
+                <div class="contact-info mb-3">
+                    <p><i class="bi bi-geo-alt-fill"></i> 123 Main Street, Kathmandu, Nepal</p>
+                    <p><i class="bi bi-envelope-fill"></i> support@jobhiring.com</p>
+                    <p><i class="bi bi-telephone-fill"></i> +977 9800000000</p>
+                    <p><i class="bi bi-globe"></i> www.jobhiring.com</p>
+                </div>
+                <h5>Follow Us</h5>
+                <p>
+                    <a href="#" class="me-2">Facebook</a>
+                    <a href="#" class="me-2">Twitter</a>
+                    <a href="#">LinkedIn</a>
+                </p>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="col-md-7">
+                <div class="contact-form p-4 rounded shadow-sm bg-light">
+                    <h3>Send Us a Message</h3>
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Your Name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Your Email">
+                        </div>
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Subject</label>
+                            <input type="text" class="form-control" id="subject" name="subject" placeholder="Subject">
+                        </div>
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea class="form-control" id="message" name="message" rows="5" placeholder="Write your message..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .contact-header {
+        background-color: #007bff;
+    }
+    .contact-info i {
+        font-size: 1.2rem;
+        color: #007bff;
+    }
+    .contact-form button:hover {
+        background-color: #0056b3;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 {% endblock %}
