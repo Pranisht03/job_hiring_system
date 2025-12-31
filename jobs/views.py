@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from rest_framework.test import APIRequestFactory
 from api.views import PostJobAPIView
 from jobs.models import Job
+from django.shortcuts import get_object_or_404, redirect
+from applications.models import JobApplicant
 
 def home(request):
     return render(request, 'base.html')
@@ -53,3 +55,38 @@ def job_list(request):
         'jobs': jobs
     }
     return render(request, 'jobs.html', context)
+
+
+@login_required
+def apply_job(request, job_id):
+    if not request.user.is_job_seeker:
+        messages.error(request, "Only job seekers can apply for jobs.")
+        return redirect("jobs:job-list")
+
+    job = get_object_or_404(Job, id=job_id, is_active=True)
+
+    # Prevent duplicate application
+    if JobApplicant.objects.filter(job=job, applicant=request.user).exists():
+        messages.warning(request, "You have already applied for this job.")
+        return redirect("jobs:job-list")
+
+    if request.method == "POST":
+        phone = request.POST.get("phone")
+        cv = request.FILES.get("cv")
+
+        if not phone or not cv:
+            messages.error(request, "All fields are required.")
+            return redirect("jobs:job-list")
+
+        JobApplicant.objects.create(
+            job=job,
+            applicant=request.user,
+            phone=phone,
+            cv=cv
+        )
+
+        messages.success(request, "Job applied successfully!")
+        return redirect("jobs:job-list")
+
+    messages.error(request, "Invalid request.")
+    return redirect("jobs:job-list")

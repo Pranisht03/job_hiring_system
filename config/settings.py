@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'accounts',
     'jobs',
+    'applications',
 ]
 
 MIDDLEWARE = [
@@ -62,6 +63,9 @@ DATABASES = {
 }
 
 STATIC_URL = '/static/'
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",

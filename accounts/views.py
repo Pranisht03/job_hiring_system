@@ -3,7 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib import messages
 from django.views.decorators.http import require_POST
-from jobs.models import Job
+from django.contrib.auth.decorators import login_required
+from applications.models import JobApplicant
 
 # Home page
 def home_view(request):
@@ -29,11 +30,15 @@ def jobseeker_signup_page(request):
 def company_signup_page(request):
     return render(request, "accounts/signup_company.html")
 
+@login_required
 def jobseeker_dashboard(request):
-    if not request.user.is_job_seeker:
-        # Optional: redirect if user is not a jobseeker
-        return redirect('accounts:login')
-    return render(request, "accounts/jobseeker_dashboard.html")
+    # Get all jobs applied by the logged-in user
+    applied_jobs = JobApplicant.objects.filter(applicant=request.user)
+
+    context = {
+        'applied_jobs': applied_jobs,
+    }
+    return render(request, 'accounts/jobseeker_dashboard.html', context)
 
 @login_required
 def company_dashboard(request):
