@@ -41,7 +41,7 @@
           <!-- ================= COMPANY ================= -->
           {% if user.is_company %}
            <li class="nav-item">
-              <a class="nav-link" href="{% url 'jobs:post_job' %}">Post Job</a>
+              <a class="nav-link" href="{% url 'jobs:post-job' %}">Post Job</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'accounts:company_profile' %}">Company Profile</a>
@@ -52,15 +52,10 @@
           {% endif %}
 
           <!-- Logout -->
-             <li class="nav-item">
-                <button class="btn btn-danger ms-2"
-                  onclick="document.getElementById('logout-form').submit();">
-                      Logout
-                </button>
-              </li>
-
-          <form id="logout-form" method="post" action="{% url 'accounts:logout' %}" style="display:none;">
-          {% csrf_token %}
+            <form method="POST" action="{% url 'accounts:logout' %}">
+                {% csrf_token %}
+              <button type="submit" class="btn btn-danger">Logout</button>
+            </form>
 
         {% else %}
 

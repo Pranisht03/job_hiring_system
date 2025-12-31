@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from accounts.models import CustomUser
 from accounts.models import JobSeekerProfile
+from jobs.models import Job
 
 class JobSeekerRegisterSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)
@@ -65,3 +66,25 @@ class JobSeekerProfileSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['user']
 
+
+class JobSerializer(serializers.ModelSerializer):
+    company_name = serializers.CharField(
+        source='company.username', read_only=True
+    )
+
+    class Meta:
+        model = Job
+        fields = [
+            'id',
+            'company_name',
+            'job_title',
+            'job_description',
+            'skills_required',
+            'experience_required',
+            'salary',
+            'job_type',
+            'location',
+            'vacancies',
+            'last_date_to_apply',
+            'created_at',
+        ]

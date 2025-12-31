@@ -19,13 +19,14 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from accounts import views as account_views
+from jobs.views import job_list
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('', account_views.home_view, name='home'),
     path('about/', account_views.about_view, name='about'),
-    path('jobs/', account_views.jobs_view, name='jobs'),
+    path('jobs/', job_list, name='jobs'),
     path('contact/', account_views.contact_view, name='contact'),
 
     path('', include('jobs.urls')),

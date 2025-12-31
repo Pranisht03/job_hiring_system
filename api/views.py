@@ -1,16 +1,15 @@
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
-from rest_framework import status
-from .serializers import JobSeekerRegisterSerializer, CompanyRegisterSerializer
+from rest_framework import status, permissions
+from .serializers import JobSeekerRegisterSerializer, CompanyRegisterSerializer, LoginSerializer, JobSeekerProfileSerializer, JobSerializer
 from django.contrib.auth import authenticate, login
-from .serializers import LoginSerializer
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 from accounts.models import JobSeekerProfile
-from .serializers import JobSeekerProfileSerializer
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authentication import SessionAuthentication
+from jobs.models import Job
 
 
 @api_view(['POST'])
@@ -100,3 +99,32 @@ def save_jobseeker_profile(request):
         return Response({"success": True, "profile": serializer.data})
     return Response(serializer.errors, status=400)
 
+class PostJobAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+
+        if not user.is_company:
+            return Response(
+                {"error": "Only companies can post jobs"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        serializer = JobSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(company=user)
+            return Response(
+                {"message": "Job posted successfully"},
+                status=status.HTTP_201_CREATED
+            )
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class JobListAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        jobs = Job.objects.all()
+        serializer = JobSerializer(jobs, many=True)
+        return Response(serializer.data)

@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from .views import get_jobseeker_profile, save_jobseeker_profile
+from api.views import PostJobAPIView, JobListAPIView
 
 
 urlpatterns = [
@@ -9,4 +10,6 @@ urlpatterns = [
     path('login/', views.login_user, name='login-user'),
     path('jobseeker/profile/', views.get_jobseeker_profile, name='get-jobseeker-profile'),
     path('jobseeker/profile/save/', views.save_jobseeker_profile, name='save-jobseeker-profile'),
+    path('jobs/post/', PostJobAPIView.as_view(), name='api-post-job'),
+    path('jobs/', JobListAPIView.as_view(), name='api-job-list'),
 ]

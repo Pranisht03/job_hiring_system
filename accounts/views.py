@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required 
 from django.contrib.auth import logout
 from django.contrib import messages
+from django.views.decorators.http import require_POST
+from jobs.models import Job
 
 # Home page
 def home_view(request):
@@ -10,10 +12,6 @@ def home_view(request):
 # About page
 def about_view(request):
     return render(request, 'about.html')
-
-# Jobs page
-def jobs_view(request):
-    return render(request, 'jobs.html')
 
 # Contact page
 def contact_view(request):
@@ -60,8 +58,8 @@ def company_profile(request):
     return render(request, 'accounts/company_profile.html')
 
 @login_required
+@require_POST
 def logout_view(request):
-    if request.method == "POST":
-        logout(request)
-        messages.success(request, "You have logged out successfully!")
+    logout(request)
+    messages.success(request, "You have logged out successfully!")
     return redirect('accounts:login')

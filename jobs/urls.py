@@ -1,9 +1,10 @@
 from django.urls import path
 from . import views
+from .views import job_list
 
 app_name = "jobs"
 
 urlpatterns = [
-    path('', views.home, name='home'),
-    path("post_job/", views.post_job, name="post_job"),
+    path('', job_list, name='jobs'),
+    path("post/", views.post_job, name="post-job"),
 ]
