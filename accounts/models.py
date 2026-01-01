@@ -25,6 +25,7 @@ class JobSeekerProfile(models.Model):
     years_of_experience = models.IntegerField(default=0)
     linkedin = models.URLField(blank=True, null=True)
     github = models.URLField(blank=True, null=True)
+    cv = models.FileField(upload_to='cvs/', blank=True, null=True)
 
     def __str__(self):
         return self.user.email

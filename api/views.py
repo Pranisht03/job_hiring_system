@@ -82,7 +82,6 @@ def get_jobseeker_profile(request):
     except JobSeekerProfile.DoesNotExist:
         return Response({"exists": False})
 
-# POST create / update profile
 @csrf_exempt
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -90,14 +89,20 @@ def get_jobseeker_profile(request):
 def save_jobseeker_profile(request):
     try:
         profile = JobSeekerProfile.objects.get(user=request.user)
-        serializer = JobSeekerProfileSerializer(profile, data=request.data)
+        serializer = JobSeekerProfileSerializer(
+            profile,
+            data=request.data,
+            partial=True
+        )
     except JobSeekerProfile.DoesNotExist:
         serializer = JobSeekerProfileSerializer(data=request.data)
 
     if serializer.is_valid():
         serializer.save(user=request.user)
         return Response({"success": True, "profile": serializer.data})
+
     return Response(serializer.errors, status=400)
+
 
 class PostJobAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]

@@ -3,8 +3,8 @@
 
 {% block content %}
 <div class="container mt-5 mb-5">
-
     <div class="card shadow profile-card p-4">
+
         <!-- ================= VIEW MODE ================= -->
         <div id="view-mode" style="display:none;">
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -13,80 +13,83 @@
             </div>
             <hr>
 
-            <p><span class="profile-label">Full Name:</span> <span id="v-name"></span></p>
-            <p><span class="profile-label">Email:</span> <span id="v-email"></span></p>
-            <p><span class="profile-label">Phone:</span> <span id="v-phone"></span></p>
-            <p><span class="profile-label">Location:</span> <span id="v-location"></span></p>
+            <p><strong>Full Name:</strong> <span id="v-name"></span></p>
+            <p><strong>Email:</strong> {{ request.user.email }}</p>
+            <p><strong>Phone:</strong> <span id="v-phone"></span></p>
+            <p><strong>Location:</strong> <span id="v-location"></span></p>
 
-            <p class="profile-label mt-2">Bio</p>
+            <p class="mt-3"><strong>Bio</strong></p>
             <p id="v-bio"></p>
 
-            <p class="profile-label mt-2">Skills</p>
+            <p class="mt-3"><strong>Skills</strong></p>
             <div id="v-skills"></div>
 
-            <p class="profile-label mt-2">Education</p>
+            <p class="mt-3"><strong>Education</strong></p>
             <p id="v-education"></p>
 
-            <p class="profile-label mt-2">Experience</p>
-            <p>
-                <span id="v-exp-level"></span> |
-                <span id="v-exp-years"></span> years
-            </p>
+            <p class="mt-3"><strong>Experience</strong></p>
+            <p><span id="v-exp-level"></span> | <span id="v-exp-years"></span> years</p>
 
-            <p class="profile-label mt-2">Links</p>
+            <p class="mt-3"><strong>Links</strong></p>
             <p>
                 <a id="v-linkedin" target="_blank">LinkedIn</a> |
                 <a id="v-github" target="_blank">GitHub</a>
             </p>
+
+            <p class="mt-3"><strong>CV</strong></p>
+            <a id="v-cv" class="btn btn-sm btn-success" target="_blank" style="display:none;">
+                Download CV
+            </a>
         </div>
 
         <!-- ================= EDIT MODE ================= -->
         <div id="edit-mode" style="display:none;">
             <h3 id="form-title">Complete Your Profile</h3>
             <hr>
-            <form id="profile-form">
+
+            <form id="profile-form" enctype="multipart/form-data">
                 {% csrf_token %}
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="full_name">Full Name</label>
-                        <input type="text" class="form-control" id="full_name" name="full_name" required>
+                        <label>Full Name</label>
+                        <input type="text" class="form-control" id="full_name" required>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required readonly>
+                        <label>Email</label>
+                        <input type="email" class="form-control" value="{{ request.user.email }}" readonly>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="phone">Phone</label>
-                        <input type="text" class="form-control" id="phone" name="phone" required>
+                        <label>Phone</label>
+                        <input type="text" class="form-control" id="phone">
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="location">Location</label>
-                        <input type="text" class="form-control" id="location" name="location" required>
+                        <label>Location</label>
+                        <input type="text" class="form-control" id="location">
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label for="bio">Bio</label>
-                    <textarea class="form-control" rows="3" id="bio" name="bio" required></textarea>
+                    <label>Bio</label>
+                    <textarea class="form-control" id="bio" rows="3"></textarea>
                 </div>
 
                 <div class="mb-3">
-                    <label for="skills">Skills (comma separated)</label>
-                    <input type="text" class="form-control" id="skills" name="skills" required>
+                    <label>Skills (comma separated)</label>
+                    <input type="text" class="form-control" id="skills">
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="education">Education</label>
-                        <input type="text" class="form-control" id="education" name="education" required>
+                        <label>Education</label>
+                        <input type="text" class="form-control" id="education">
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="experience_level">Experience Level</label>
-                        <select class="form-select" id="experience_level" name="experience_level">
+                        <label>Experience Level</label>
+                        <select class="form-select" id="experience_level">
                             <option value="fresher">Fresher</option>
                             <option value="junior">Junior</option>
                             <option value="mid">Mid</option>
@@ -96,19 +99,24 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="years_of_experience">Years of Experience</label>
-                    <input type="number" class="form-control" id="years_of_experience" name="years_of_experience" min="0" required>
+                    <label>Years of Experience</label>
+                    <input type="number" class="form-control" id="years_of_experience" min="0">
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="linkedin">LinkedIn</label>
-                        <input type="url" class="form-control" id="linkedin" name="linkedin">
+                        <label>LinkedIn</label>
+                        <input type="url" class="form-control" id="linkedin">
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="github">GitHub</label>
-                        <input type="url" class="form-control" id="github" name="github">
+                        <label>GitHub</label>
+                        <input type="url" class="form-control" id="github">
                     </div>
+                </div>
+
+                <div class="mb-3">
+                    <label>Upload CV (PDF/DOCX)</label>
+                    <input type="file" class="form-control" id="cv" accept=".pdf,.doc,.docx">
                 </div>
 
                 <div class="text-center mt-4">
@@ -117,165 +125,94 @@
                 </div>
             </form>
         </div>
+
     </div>
 </div>
 
-<!-- ================= JS LOGIC ================= -->
 <script>
 let profileExists = false;
 
-// CSRF helper
 function getCSRFToken() {
     return document.querySelector('[name=csrfmiddlewaretoken]').value;
 }
 
-// Enable Edit Mode
 function enableEdit() {
     document.getElementById('view-mode').style.display = 'none';
     document.getElementById('edit-mode').style.display = 'block';
-    document.getElementById('form-title').innerText = profileExists ? "Edit Profile" : "Complete Your Profile";
 }
 
-// Cancel Edit
 function cancelEdit() {
-    if(profileExists){
-        document.getElementById('edit-mode').style.display = 'none';
-        document.getElementById('view-mode').style.display = 'block';
-    } else {
-        document.getElementById('profile-form').reset();
-    }
+    document.getElementById('edit-mode').style.display = profileExists ? 'none' : 'block';
+    document.getElementById('view-mode').style.display = profileExists ? 'block' : 'none';
 }
 
-// Load profile
 async function loadProfile() {
-    try {
-        const res = await fetch('/api/jobseeker/profile/', {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'same-origin'
-        });
-        const data = await res.json();
+    const res = await fetch('/api/jobseeker/profile/', { credentials: 'same-origin' });
+    const data = await res.json();
 
-        if(data.exists){
-            profileExists = true;
-            const profile = data.profile;
+    if (!data.exists) {
+        document.getElementById('edit-mode').style.display = 'block';
+        return;
+    }
 
-            document.getElementById('view-mode').style.display = 'block';
-            document.getElementById('edit-mode').style.display = 'none';
+    profileExists = true;
+    const p = data.profile;
 
-            // View mode
-            document.getElementById('v-name').innerText = profile.full_name;
-            document.getElementById('v-email').innerText = "{{ request.user.email }}";
-            document.getElementById('v-phone').innerText = profile.phone || '';
-            document.getElementById('v-location').innerText = profile.location || '';
-            document.getElementById('v-bio').innerText = profile.bio || '';
-            document.getElementById('v-education').innerText = profile.education || '';
-            document.getElementById('v-exp-level').innerText = profile.experience_level || '';
-            document.getElementById('v-exp-years').innerText = profile.years_of_experience || 0;
-            document.getElementById('v-linkedin').href = profile.linkedin || '#';
-            document.getElementById('v-github').href = profile.github || '#';
+    document.getElementById('view-mode').style.display = 'block';
+    document.getElementById('edit-mode').style.display = 'none';
 
-            // Skills badges
-            const skillsDiv = document.getElementById('v-skills');
-            skillsDiv.innerHTML = '';
-            profile.skills?.split(',').forEach(skill => {
-                const span = document.createElement('span');
-                span.className = 'badge bg-primary me-1';
-                span.innerText = skill.trim();
-                skillsDiv.appendChild(span);
-            });
+    document.getElementById('v-name').innerText = p.full_name || '';
+    document.getElementById('v-phone').innerText = p.phone || '';
+    document.getElementById('v-location').innerText = p.location || '';
+    document.getElementById('v-bio').innerText = p.bio || '';
+    document.getElementById('v-education').innerText = p.education || '';
+    document.getElementById('v-exp-level').innerText = p.experience_level || '';
+    document.getElementById('v-exp-years').innerText = p.years_of_experience || '';
 
-            // Pre-fill edit form
-            document.getElementById('full_name').value = profile.full_name;
-            document.getElementById('email').value = "{{ request.user.email }}";
-            document.getElementById('phone').value = profile.phone || '';
-            document.getElementById('location').value = profile.location || '';
-            document.getElementById('bio').value = profile.bio || '';
-            document.getElementById('skills').value = profile.skills || '';
-            document.getElementById('education').value = profile.education || '';
-            document.getElementById('experience_level').value = profile.experience_level || 'fresher';
-            document.getElementById('years_of_experience').value = profile.years_of_experience || 0;
-            document.getElementById('linkedin').value = profile.linkedin || '';
-            document.getElementById('github').value = profile.github || '';
-        } else {
-            profileExists = false;
-            document.getElementById('edit-mode').style.display = 'block';
-            document.getElementById('view-mode').style.display = 'none';
-            document.getElementById('form-title').innerText = "Complete Your Profile";
-            document.getElementById('email').value = "{{ request.user.email }}";
+    document.getElementById('v-linkedin').href = p.linkedin || '#';
+    document.getElementById('v-github').href = p.github || '#';
+
+    const skillsDiv = document.getElementById('v-skills');
+    skillsDiv.innerHTML = '';
+    (p.skills || '').split(',').forEach(s => {
+        if (s.trim()) {
+            skillsDiv.innerHTML += `<span class="badge bg-primary me-1">${s.trim()}</span>`;
         }
-    } catch(err){
-        console.error("Error loading profile:", err);
+    });
+
+    if (p.cv) {
+        document.getElementById('v-cv').href = p.cv;
+        document.getElementById('v-cv').style.display = 'inline-block';
     }
 }
 
-// Save profile
 async function saveProfile() {
-    const payload = {
-        full_name: document.getElementById('full_name').value,
-        phone: document.getElementById('phone').value,
-        location: document.getElementById('location').value,
-        bio: document.getElementById('bio').value,
-        skills: document.getElementById('skills').value,
-        education: document.getElementById('education').value,
-        experience_level: document.getElementById('experience_level').value,
-        years_of_experience: parseInt(document.getElementById('years_of_experience').value) || 0,
-        linkedin: document.getElementById('linkedin').value.startsWith('http') ? document.getElementById('linkedin').value : 'https://' + document.getElementById('linkedin').value,
-        github: document.getElementById('github').value
-    };
+    const formData = new FormData();
 
-    try {
-        const res = await fetch('/api/jobseeker/profile/save/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCSRFToken()
-            },
-            body: JSON.stringify(payload),
-            credentials: 'same-origin'
-        });
+    ['full_name','phone','location','bio','skills','education','experience_level','years_of_experience','linkedin','github']
+    .forEach(id => formData.append(id, document.getElementById(id).value));
 
-        const data = await res.json();
+    const cv = document.getElementById('cv').files[0];
+    if (cv) formData.append('cv', cv);
 
-        if(data.success){
-            profileExists = true;
+    const res = await fetch('/api/jobseeker/profile/save/', {
+        method: 'POST',
+        headers: { 'X-CSRFToken': getCSRFToken() },
+        body: formData,
+        credentials: 'same-origin'
+    });
 
-            // Update view-mode dynamically
-            document.getElementById('view-mode').style.display = 'block';
-            document.getElementById('edit-mode').style.display = 'none';
-            document.getElementById('v-name').innerText = payload.full_name;
-            document.getElementById('v-phone').innerText = payload.phone;
-            document.getElementById('v-location').innerText = payload.location;
-            document.getElementById('v-bio').innerText = payload.bio;
-            document.getElementById('v-education').innerText = payload.education;
-            document.getElementById('v-exp-level').innerText = payload.experience_level;
-            document.getElementById('v-exp-years').innerText = payload.years_of_experience;
-            document.getElementById('v-linkedin').href = payload.linkedin || '#';
-            document.getElementById('v-github').href = payload.github || '#';
-
-            // Update skills badges
-            const skillsDiv = document.getElementById('v-skills');
-            skillsDiv.innerHTML = '';
-            payload.skills.split(',').forEach(skill => {
-                const span = document.createElement('span');
-                span.className = 'badge bg-primary me-1';
-                span.innerText = skill.trim();
-                skillsDiv.appendChild(span);
-            });
-
-            alert("Profile saved successfully!");
-        } else {
-            console.error("Backend error:", data);
-            alert("Error saving profile. Check console for details.");
-        }
-    } catch(err){
-        console.error("Network error:", err);
-        alert("Network/server error while saving profile.");
+    const data = await res.json();
+    if (data.success) {
+        alert("Profile saved successfully");
+        loadProfile();
+    } else {
+        console.error(data);
+        alert("Error saving profile");
     }
 }
 
-// Initialize
-document.addEventListener("DOMContentLoaded", loadProfile);
+document.addEventListener('DOMContentLoaded', loadProfile);
 </script>
 
 <style>
@@ -283,10 +220,6 @@ document.addEventListener("DOMContentLoaded", loadProfile);
     max-width: 900px;
     margin: auto;
     border-radius: 12px;
-}
-.profile-label {
-    font-weight: 600;
-    color: #6c757d;
 }
 </style>
 {% endblock %}

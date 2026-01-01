@@ -1,6 +1,8 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
+
 <div class="container py-5">
 
   <!-- Page Title -->
@@ -10,31 +12,45 @@
   </div>
 
   <div class="row g-4">
+
     {% for job in jobs %}
-      <div class="col-lg-4 col-md-6">
-        <div class="card h-100 shadow-sm border-0 job-card">
+    <div class="col-lg-4 col-md-6">
+      <div class="card h-100 shadow-sm border-0 job-card">
 
-          <div class="card-body d-flex flex-column">
-            <!-- Job Title -->
-            <h5 class="card-title fw-bold text-primary">{{ job.job_title }}</h5>
+        <div class="card-body d-flex flex-column">
 
-            <!-- Company Name -->
-            <p class="mb-1 text-muted">
-              <i class="bi bi-building"></i>
-              {{ job.company.username }}
-            </p>
+          <!-- Job Title -->
+          <h5 class="card-title fw-bold text-primary">
+            {{ job.job_title }}
+          </h5>
 
-            <!-- Location & Salary -->
-            <p class="mb-2">
-              <i class="bi bi-geo-alt"></i> {{ job.location }}
-              {% if job.salary %}
-                | 💰 {{ job.salary }}
-              {% endif %}
-            </p>
+          <!-- Company -->
+          <p class="mb-1 text-muted">
+            <i class="bi bi-building"></i>
+            {{ job.company.company_name }}
+          </p>
 
-            <!-- Apply Button for Job Seekers -->
+          <!-- Location & Salary -->
+          <p class="mb-3">
+            <i class="bi bi-geo-alt"></i> {{ job.location }}
+            {% if job.salary %}
+              | 💰 {{ job.salary }}
+            {% endif %}
+          </p>
+
+          <!-- Buttons -->
+          <div class="d-flex gap-2 mt-auto">
+
+            <!-- View Button -->
+            <button class="btn btn-outline-primary btn-sm w-50"
+                    data-bs-toggle="modal"
+                    data-bs-target="#viewJobModal{{ job.id }}">
+              View
+            </button>
+
+            <!-- Apply Button -->
             {% if user.is_authenticated and user.is_job_seeker %}
-            <button class="btn btn-primary btn-sm"
+            <button class="btn btn-primary btn-sm w-50"
                     data-bs-toggle="modal"
                     data-bs-target="#applyModal{{ job.id }}">
               Apply
@@ -42,79 +58,128 @@
             {% endif %}
 
           </div>
+
         </div>
       </div>
+    </div>
 
-      <!-- Pop Up form for Job Apply -->
- <div class="modal fade" id="applyModal{{ job.id }}" tabindex="-1">
-  <div class="modal-dialog">
-    <form method="POST"
-          action="{% url 'jobs:apply-job' job.id %}"
-          enctype="multipart/form-data"
-          class="modal-content">
+    <!-- ================= VIEW JOB MODAL ================= -->
+    <div class="modal fade" id="viewJobModal{{ job.id }}" tabindex="-1">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
 
-      {% csrf_token %}
+          <div class="modal-header">
+            <h5 class="modal-title fw-bold">{{ job.job_title }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
 
-      <div class="modal-header">
-        <h5 class="modal-title">Apply for {{ job.job_title }}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <div class="modal-body">
+
+            <p><strong>Company:</strong> {{ job.company.company_name }}</p>
+            <p><strong>Location:</strong> {{ job.location }}</p>
+
+            {% if job.salary %}
+            <p><strong>Salary:</strong> {{ job.salary }}</p>
+            {% endif %}
+
+            <hr>
+
+            <h6 class="fw-bold">Job Description</h6>
+            <p>{{ job.job_description }}</p>
+
+            {% if job.skills_required %}
+            <h6 class="fw-bold mt-3">Skills Required</h6>
+            <p>{{ job.skills_required }}</p>
+            {% endif %}
+
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Close
+            </button>
+
+            {% if user.is_authenticated and user.is_job_seeker %}
+            <button class="btn btn-success"
+                    data-bs-toggle="modal"
+                    data-bs-target="#applyModal{{ job.id }}"
+                    data-bs-dismiss="modal">
+              Apply Now
+            </button>
+            {% endif %}
+          </div>
+
+        </div>
       </div>
+    </div>
 
-      <div class="modal-body">
+    <!-- ================= APPLY JOB MODAL ================= -->
+    <div class="modal fade" id="applyModal{{ job.id }}" tabindex="-1">
+      <div class="modal-dialog">
+        <form method="POST"
+              action="{% url 'jobs:apply-job' job.id %}"
+              enctype="multipart/form-data"
+              class="modal-content">
 
-        <div class="mb-3">
-          <label>Name</label>
-          <input type="text"
-                 class="form-control"
-                 value="{{ user.full_name }}"
-                 readonly>
-        </div>
+          {% csrf_token %}
 
-        <div class="mb-3">
-          <label>Email</label>
-          <input type="email"
-                 class="form-control"
-                 value="{{ user.email }}"
-                 readonly>
-        </div>
+          <div class="modal-header">
+            <h5 class="modal-title">Apply for {{ job.job_title }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
 
-        <div class="mb-3">
-          <label>Phone Number</label>
-          <input type="text"
-                 name="phone"
-                 class="form-control"
-                 required>
-        </div>
+          <div class="modal-body">
 
-        <div class="mb-3">
-          <label>Upload CV</label>
-          <input type="file"
-                 name="cv"
-                 class="form-control"
-                 accept=".pdf,.doc,.docx"
-                 required>
-        </div>
+            <div class="mb-3">
+              <label>Name</label>
+              <input type="text" class="form-control"
+                     value="{{ user.full_name }}" readonly>
+            </div>
 
+            <div class="mb-3">
+              <label>Email</label>
+              <input type="email" class="form-control"
+                     value="{{ user.email }}" readonly>
+            </div>
+
+            <div class="mb-3">
+              <label>Phone Number</label>
+              <input type="text" name="phone"
+                     class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+              <label>Upload CV</label>
+              <input type="file" name="cv"
+                     class="form-control"
+                     accept=".pdf,.doc,.docx" required>
+            </div>
+
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-success">
+              Submit Application
+            </button>
+          </div>
+
+        </form>
       </div>
-
-      <div class="modal-footer">
-        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="submit" class="btn btn-success">Submit Application</button>
-      </div>
-
-    </form>
-  </div>
-</div>
+    </div>
 
     {% empty %}
-      <div class="text-center">
-        <p class="text-muted">No jobs available at the moment.</p>
-      </div>
+    <div class="text-center">
+      <p class="text-muted">No jobs available at the moment.</p>
+    </div>
     {% endfor %}
+
   </div>
 </div>
 
-<!-- Optional CSS for card hover -->
+<!-- ================= STYLES ================= -->
 <style>
 .job-card {
   transition: all 0.3s ease;

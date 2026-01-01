@@ -61,6 +61,7 @@ class LoginSerializer(serializers.Serializer):
     user_type = serializers.ChoiceField(choices=[('jobseeker', 'Job Seeker'), ('company', 'Company')])
 
 class JobSeekerProfileSerializer(serializers.ModelSerializer):
+    cv = serializers.FileField(required=False)
     class Meta:
         model = JobSeekerProfile
         fields = '__all__'
