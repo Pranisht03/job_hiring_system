@@ -17,6 +17,17 @@
     <div class="col-lg-4 col-md-6">
       <div class="card h-100 shadow-sm border-0 job-card">
 
+          {% if job.match_score != None %}
+            <span class="badge
+                {% if job.match_score >= 90 %} bg-success
+                {% elif job.match_score >= 70 %} bg-warning
+                {% else %} bg-danger {% endif %}
+                position-absolute top-0 end-0 m-2">
+                {{ job.match_score }}% Match
+            </span>
+          {% endif %}
+
+
         <div class="card-body d-flex flex-column">
 
           <!-- Job Title -->
@@ -51,6 +62,9 @@
             <!-- Apply Button -->
             {% if user.is_authenticated and user.is_job_seeker %}
             <button class="btn btn-primary btn-sm w-50"
+                {% if job.match_score < 70 %}
+                    onclick="return confirm('Your match score is low. Are you sure you want to apply?')"
+                {% endif %}
                     data-bs-toggle="modal"
                     data-bs-target="#applyModal{{ job.id }}">
               Apply

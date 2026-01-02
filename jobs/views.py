@@ -7,6 +7,9 @@ from jobs.models import Job
 from django.shortcuts import get_object_or_404, redirect
 from applications.models import JobApplicant
 
+from .utils.cv_text_extractor import extract_text_from_cv
+from jobs.utils.skill_matcher import normalize_skills, extract_cv_skills, cosine_similarity
+
 def home(request):
     return render(request, 'base.html')
 
@@ -48,13 +51,44 @@ def post_job(request):
         }
     )
 
-def job_list(request):
-    jobs = Job.objects.filter(is_active=True).order_by('-created_at')
+# def job_list(request):
+#     jobs = Job.objects.filter(is_active=True).order_by('-created_at')
 
-    context = {
-        'jobs': jobs
-    }
-    return render(request, 'jobs.html', context)
+#     context = {
+#         'jobs': jobs
+#     }
+#     return render(request, 'jobs.html', context)
+
+def job_list(request):
+    jobs = Job.objects.all()
+
+    # Default: no match score
+    for job in jobs:
+        job.match_score = None
+        job.match_label = None
+
+    if request.user.is_authenticated and hasattr(request.user, 'jobseekerprofile'):
+        profile = request.user.jobseekerprofile
+
+        if profile.cv:
+            cv_text = extract_text_from_cv(profile.cv.path)
+
+            for job in jobs:
+                job_skills = normalize_skills(job.skills_required)
+                cv_skills = extract_cv_skills(cv_text, job_skills)
+                score = cosine_similarity(job_skills, cv_skills)
+
+                job.match_score = score
+
+                if score >= 90:
+                    job.match_label = "Very Good"
+                elif score >= 70:
+                    job.match_label = "Good"
+                else:
+                    job.match_label = "Low"
+
+    return render(request, "jobs.html", {"jobs": jobs})
+
 
 
 @login_required
