@@ -1,6 +1,137 @@
-{% extends 'base.html' %}
-
+{% extends "base.html" %}
+{% load static %}
 {% block content %}
-<h1>Home Page</h1>
-<p>Welcome to JobHire!</p>
+
+<!-- ================= HERO SECTION ================= -->
+<section class="hero-section text-white text-center">
+  <div class="container">
+    <h1 class="fw-bold">Find Your Dream Job with AI Matching</h1>
+    <p class="lead mt-3">
+      Personalized job recommendations based on your skills and profile
+    </p>
+        {% if user.is_authenticated and user.is_job_seeker %}
+        <a href="{% url 'jobs:job-list' %}" class="btn btn-light btn-lg mt-3">
+          Browse Jobs
+            </a>
+        {% elif user.is_authenticated and user.is_company %}
+            <a href="{% url 'jobs:post-job' %}" class="btn btn-light btn-lg mt-3">
+              Post Jobs
+            </a>
+        {% else %}
+            <a href="{% url 'accounts:login' %}" class="btn btn-outline-light btn-lg mt-3">
+              Get Started
+            </a>
+        {% endif %}
+</section>
+
+<!-- ================= RECOMMENDED JOBS ================= -->
+<section class="container my-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold">
+      🎯 Recommended Jobs
+    </h3>
+    <span class="badge bg-success">Match Score ≥ 90%</span>
+  </div>
+
+  {% if recommended_jobs %}
+  <div class="row g-4">
+    {% for job in recommended_jobs %}
+      {% if job.match_score >= 90 %}
+      <div class="col-md-4">
+        <div class="card job-card shadow-sm h-100">
+          <div class="card-body">
+
+            <div class="d-flex justify-content-between">
+              <h5 class="card-title fw-bold">{{ job.title }}</h5>
+              <span class="badge bg-success">
+                {{ job.match_score }}%
+              </span>
+            </div>
+
+            <p class="text-muted mb-1">
+              <i class="bi bi-building"></i> {{ job.company.name }}
+            </p>
+
+            <p class="text-muted mb-1">
+              <i class="bi bi-geo-alt"></i> {{ job.location }}
+            </p>
+
+            <span class="badge bg-primary mt-2">
+              {{ job.job_type }}
+            </span>
+
+            <div class="mt-4">
+              <a href="{% url 'jobs:job_detail' job.id %}"
+                 class="btn btn-outline-primary w-100">
+                View Job
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% else %}
+    <div class="alert alert-warning text-center">
+      No recommended jobs found. Complete your profile to get better matches.
+    </div>
+  {% endif %}
+</section>
+
+<!-- ================= WHY CHOOSE US ================= -->
+<section class="bg-light py-5">
+  <div class="container">
+    <h3 class="text-center fw-bold mb-5">Why Choose Our Platform?</h3>
+
+    <div class="row text-center g-4">
+      <div class="col-md-4">
+        <div class="feature-box p-4 shadow-sm">
+          <i class="bi bi-cpu feature-icon"></i>
+          <h5 class="fw-bold mt-3">AI-Powered Matching</h5>
+          <p class="text-muted">
+            Smart job recommendations using cosine similarity algorithm.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="feature-box p-4 shadow-sm">
+          <i class="bi bi-briefcase feature-icon"></i>
+          <h5 class="fw-bold mt-3">Verified Companies</h5>
+          <p class="text-muted">
+            Apply confidently to trusted and verified employers.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="feature-box p-4 shadow-sm">
+          <i class="bi bi-graph-up feature-icon"></i>
+          <h5 class="fw-bold mt-3">Career Growth</h5>
+          <p class="text-muted">
+            Find jobs that truly match your skills and experience.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CALL TO ACTION ================= -->
+<section class="cta-section text-center text-white">
+  <div class="container">
+    <h2 class="fw-bold">Ready to Take the Next Step?</h2>
+    <p class="lead mt-2">
+      Upload your CV and let AI find the best job for you
+    </p>
+    {% if user.is_job_seeker %}
+    <a href="{% url 'accounts:jobseeker_profile' %}" class="btn btn-light btn-lg mt-3">
+      Complete Your Profile
+    </a>
+    {% endif %}
+  </div>
+</section>
+
 {% endblock %}

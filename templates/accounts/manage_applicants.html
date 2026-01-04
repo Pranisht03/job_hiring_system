@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+
+  <!-- ================= PAGE TITLE ================= -->
+  <div class="text-center mb-4">
+    <h2 class="fw-bold">Manage Applicants</h2>
+    <p class="text-muted">View and manage all job applications</p>
+  </div>
+
+  <!-- ================= FILTER ================= -->
+  <form method="GET" class="row g-3 mb-4 align-items-end">
+    <div class="col-md-3">
+      <label class="form-label">Filter by Match Score</label>
+      <select name="match" class="form-select">
+        <option value="">All</option>
+        <option value="70" {% if match_filter == '70' %}selected{% endif %}>70+</option>
+        <option value="80" {% if match_filter == '80' %}selected{% endif %}>80+</option>
+        <option value="90" {% if match_filter == '90' %}selected{% endif %}>90+</option>
+      </select>
+    </div>
+    <div class="col-md-2 d-grid">
+      <button class="btn btn-primary">Apply Filter</button>
+    </div>
+  </form>
+
+  <!-- ================= APPLICANTS TABLE ================= -->
+  <div class="card shadow border-0">
+    <div class="card-header bg-dark text-white">
+      <h5 class="mb-0">Job Applicants</h5>
+    </div>
+
+    <div class="card-body p-0">
+      <table class="table table-hover mb-0 align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>SN</th>
+            <th>Applicant Name</th>
+            <th>Email</th>
+            <th>Job Title</th>
+            <th>Phone</th>
+            <th>Match Score</th>
+            <th>Status</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for applicant in applicants %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ applicant.applicant.get_full_name }}</td>
+            <td>{{ applicant.applicant.email }}</td>
+            <td>{{ applicant.job.job_title }}</td>
+            <td>{{ applicant.phone }}</td>
+            <td>
+              {% if applicant.match_score %}
+                {{ applicant.match_score }}%
+              {% else %}
+                N/A
+              {% endif %}
+            </td>
+            <td>
+              {% if applicant.status == "pending" %}
+                <span class="badge bg-warning text-dark">{{ applicant.get_status_display }}</span>
+              {% elif applicant.status == "accepted" %}
+                <span class="badge bg-success">{{ applicant.get_status_display }}</span>
+              {% elif applicant.status == "rejected" %}
+                <span class="badge bg-danger">{{ applicant.get_status_display }}</span>
+              {% endif %}
+            </td>
+            <td class="text-center">
+              {% if applicant.status == "pending" %}
+              <a href="{% url 'jobs:update-application-status' applicant.id 'accepted' %}" class="btn btn-sm btn-success mb-1">Accept</a>
+              <a href="{% url 'jobs:update-application-status' applicant.id 'rejected' %}" class="btn btn-sm btn-danger mb-1">Reject</a>
+              {% else %}
+              <button class="btn btn-sm btn-secondary" disabled>Processed</button>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="8" class="text-center py-4 text-muted">
+              No applicants found.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ================= STYLES ================= -->
+<style>
+.table th, .table td {
+  vertical-align: middle !important;
+}
+</style>
+
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+
+  <h2 class="mb-4 text-center">Manage Your Jobs</h2>
+
+  <!-- Search -->
+  <form method="GET" class="mb-3 d-flex gap-2">
+    <input type="text" name="q" class="form-control" placeholder="Search job title" value="{{ request.GET.q }}">
+    <button class="btn btn-primary">Search</button>
+  </form>
+
+  <!-- Jobs Table -->
+  <div class="card shadow-sm border-0">
+    <div class="card-header bg-dark text-white">
+      <h5 class="mb-0">Posted Jobs</h5>
+    </div>
+
+    <div class="card-body p-0">
+      <table class="table table-hover mb-0 align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Job Title</th>
+            <th>Location</th>
+            <th>Salary</th>
+            <th>Status</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for job in jobs %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ job.job_title }}</td>
+            <td>{{ job.location }}</td>
+            <td>{{ job.salary|default:"Not Disclosed" }}</td>
+            <td>
+              {% if job.is_active %}
+                <span class="badge bg-success">Active</span>
+              {% else %}
+                <span class="badge bg-secondary">Inactive</span>
+              {% endif %}
+            </td>
+            <td class="text-center">
+              <a href="#" class="btn btn-sm btn-outline-primary">View</a>
+              <a href="#" class="btn btn-sm btn-outline-warning">Edit</a>
+              <a href="#" class="btn btn-sm btn-outline-danger">Delete</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" class="text-center py-4 text-muted">
+              No jobs posted yet.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<style>
+.table-hover tbody tr:hover {
+  background-color: #f2f2f2;
+}
+</style>
+
+{% endblock %}

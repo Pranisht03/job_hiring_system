@@ -6,6 +6,9 @@ from api.views import PostJobAPIView
 from jobs.models import Job
 from django.shortcuts import get_object_or_404, redirect
 from applications.models import JobApplicant
+from django.db.models import Q
+from django.utils.timezone import now
+from datetime import timedelta
 
 from .utils.cv_text_extractor import extract_text_from_cv
 from jobs.utils.skill_matcher import normalize_skills, extract_cv_skills, cosine_similarity
@@ -51,21 +54,42 @@ def post_job(request):
         }
     )
 
-# def job_list(request):
-#     jobs = Job.objects.filter(is_active=True).order_by('-created_at')
-
-#     context = {
-#         'jobs': jobs
-#     }
-#     return render(request, 'jobs.html', context)
 
 def job_list(request):
-    jobs = Job.objects.all()
+    jobs = Job.objects.all().order_by('-created_at')
 
-    # Default: no match score
+    # ================= SEARCH & FILTER (DB LEVEL) =================
+
+    q = request.GET.get('q')
+    if q:
+        jobs = jobs.filter(
+            Q(job_title__icontains=q) |
+            Q(company__company_name__icontains=q) |
+            Q(skills_required__icontains=q)
+        )
+
+    location = request.GET.get('location')
+    if location:
+        jobs = jobs.filter(location__icontains=location)
+
+    date = request.GET.get('date')
+    if date:
+        jobs = jobs.filter(
+            created_at__gte=now() - timedelta(days=int(date))
+        )
+
+    # ================= DEFAULT MATCH VALUES =================
+
     for job in jobs:
         job.match_score = None
         job.match_label = None
+
+        if job.skills_required:
+            job.skills_list = [s.strip() for s in job.skills_required.split(",")]
+        else:
+            job.skills_list = []
+
+    # ================= AI MATCHING LOGIC =================
 
     if request.user.is_authenticated and hasattr(request.user, 'jobseekerprofile'):
         profile = request.user.jobseekerprofile
@@ -87,7 +111,14 @@ def job_list(request):
                 else:
                     job.match_label = "Low"
 
+    # ================= MATCH SCORE FILTER (POST AI) =================
+
+    match = request.GET.get('match')
+    if match:
+        jobs = [job for job in jobs if job.match_score is not None and job.match_score >= int(match)]
+
     return render(request, "jobs.html", {"jobs": jobs})
+
 
 
 

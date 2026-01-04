@@ -19,8 +19,8 @@ urlpatterns = [
     path("register/company/", views.company_signup_page, name="company_signup"),
 
     path("jobseeker_dashboard/", views.jobseeker_dashboard, name="jobseeker-dashboard"),
-    path("company_dashboard/", views.company_dashboard, name="company-dashboard"),
+    path("manage/applicants/", views.manage_applicants, name="manage_applicants"),
 
     path('jobseeker/profile/', views.jobseeker_profile, name='jobseeker_profile'),
-    path('company/profile/', views.company_profile, name='company_profile'),
+    path('manage/jobs/', views.manage_jobs, name='manage_jobs'),
 ]
