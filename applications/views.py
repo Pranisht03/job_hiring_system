@@ -84,3 +84,58 @@ def update_application_status(request, app_id, status):
         application.save()
 
     return redirect("applications:manage_applicants")
+
+
+@login_required
+def company_analytics_dashboard(request):
+    user = request.user
+
+    # Ensure only company can access
+    if not user.is_company:
+        return redirect('accounts:login')
+
+    # Jobs posted by this company
+    jobs = Job.objects.filter(company=user)
+    total_jobs = jobs.count()
+
+    # All applicants for this company's jobs
+    applicants = JobApplicant.objects.filter(job__company=user)
+    total_applicants = applicants.count()
+    pending_count = applicants.filter(status="pending").count()
+    accepted_count = applicants.filter(status="accepted").count()
+    rejected_count = applicants.filter(status="rejected").count()
+    top_applicants_count = applicants.filter(match_score__gte=70).count()
+
+    # Data for charts
+    # 1. Applications per Job
+    applications_per_job = [
+        {"job": job.job_title, "count": JobApplicant.objects.filter(job=job).count()}
+        for job in jobs
+    ]
+
+    # 2. Status distribution
+    status_distribution = {
+        "Pending": pending_count,
+        "Accepted": accepted_count,
+        "Rejected": rejected_count
+    }
+
+    # 3. Match score distribution (buckets: 0-40, 41-70, 71-100)
+    bucket_0_40 = applicants.filter(match_score__lte=40).count()
+    bucket_41_70 = applicants.filter(match_score__gt=40, match_score__lt=71).count()
+    bucket_71_100 = applicants.filter(match_score__gte=71).count()
+    match_score_distribution = [bucket_0_40, bucket_41_70, bucket_71_100]
+
+    context = {
+        "total_jobs": total_jobs,
+        "total_applicants": total_applicants,
+        "pending_count": pending_count,
+        "accepted_count": accepted_count,
+        "rejected_count": rejected_count,
+        "top_applicants_count": top_applicants_count,
+        "applications_per_job": applications_per_job,
+        "status_distribution": status_distribution,
+        "match_score_distribution": match_score_distribution,
+    }
+
+    return render(request, "accounts/company_analytics_dashboard.html", context)

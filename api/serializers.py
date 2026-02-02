@@ -4,20 +4,19 @@ from accounts.models import JobSeekerProfile
 from jobs.models import Job
 
 class JobSeekerRegisterSerializer(serializers.ModelSerializer):
-    confirm_password = serializers.CharField(write_only=True)
-
     class Meta:
         model = CustomUser
-        fields = ['full_name', 'email', 'password', 'confirm_password']
-        extra_kwargs = {'password': {'write_only': True}}
+        fields = ['full_name', 'email', 'password']
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
 
-    def validate(self, data):
-        if data['password'] != data['confirm_password']:
-            raise serializers.ValidationError({"confirm_password": "Passwords do not match!"})
-        return data
+    def validate_email(self, value):
+        if CustomUser.objects.filter(email=value).exists():
+            raise serializers.ValidationError("Email already registered")
+        return value
 
     def create(self, validated_data):
-        validated_data.pop('confirm_password')
         user = CustomUser(
             email=validated_data['email'],
             full_name=validated_data.get('full_name', ''),
@@ -28,22 +27,20 @@ class JobSeekerRegisterSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
-
 class CompanyRegisterSerializer(serializers.ModelSerializer):
-    confirm_password = serializers.CharField(write_only=True)
-
     class Meta:
         model = CustomUser
-        fields = ['company_name', 'email', 'password', 'confirm_password']
-        extra_kwargs = {'password': {'write_only': True}}
+        fields = ['company_name', 'email', 'password']
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
 
-    def validate(self, data):
-        if data['password'] != data['confirm_password']:
-            raise serializers.ValidationError({"confirm_password": "Passwords do not match!"})
-        return data
+    def validate_email(self, value):
+        if CustomUser.objects.filter(email=value).exists():
+            raise serializers.ValidationError("Email already registered")
+        return value
 
     def create(self, validated_data):
-        validated_data.pop('confirm_password')
         user = CustomUser(
             email=validated_data['email'],
             company_name=validated_data.get('company_name', ''),

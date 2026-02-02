@@ -20,31 +20,41 @@
                     </div>
                     {% endif %}
 
-                    <form method="POST" action="/api/register/jobseeker/" onsubmit="return validateForm()">
+                    <form id="jobseekerForm">
                         {% csrf_token %}
 
-                        <!-- Full Name -->
-                        <div class="mb-3"> <label class="form-label">Full Name:</label>
-                        <input type="text" class="form-control" id="fullname" name="full_name" required>
+                        <div class="mb-3">
+                            <label class="form-label">Full Name:</label>
+                            <input type="text" class="form-control" id="fullname" required>
                         </div>
-
-                        <!-- Email -->
-                         <div class="mb-3"> <label class="form-label">Email:</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
+                    
+                        <div class="mb-3">
+                            <label class="form-label">Email:</label>
+                            <input type="email" class="form-control" id="email" required>
                         </div>
-
-                        <!-- Password -->
-                         <div class="mb-3"> <label class="form-label">Password:</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
+                    
+                        <div class="mb-3">
+                            <label class="form-label">Password:</label>
+                            <input type="password" class="form-control" id="password" required>
+                            <small id="passwordError" class="text-danger d-none">
+                                Password must be 8+ chars with uppercase, lowercase & symbol
+                            </small>
                         </div>
-
-                        <!-- Confirm Password -->
-                         <div class="mb-3"> <label class="form-label">Confirm Password:</label>
-                        <input type="password" class="form-control" id="confirmPassword" name="confirm_password" required>
+                    
+                        <div class="mb-3">
+                            <label class="form-label">Confirm Password:</label>
+                            <input type="password" class="form-control" id="confirmPassword" required>
+                            <small id="confirmError" class="text-danger d-none">
+                                Passwords do not match
+                            </small>
                         </div>
-
+                    
+                        <div id="successMsg" class="alert alert-success d-none"></div>
+                        <div id="errorMsg" class="alert alert-danger d-none"></div>
+                    
                         <button type="submit" class="btn btn-primary w-100">Sign Up</button>
                     </form>
+
 
 
                     <p class="text-center mt-3">
@@ -58,32 +68,65 @@
 </div>
 
 <script>
-function validateForm() {
+document.getElementById("jobseekerForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
     let password = document.getElementById("password").value;
     let confirmPassword = document.getElementById("confirmPassword").value;
+
     let passwordError = document.getElementById("passwordError");
     let confirmError = document.getElementById("confirmError");
+    let successMsg = document.getElementById("successMsg");
+    let errorMsg = document.getElementById("errorMsg");
 
-    // Hide all errors initially
     passwordError.classList.add("d-none");
     confirmError.classList.add("d-none");
+    errorMsg.classList.add("d-none");
 
-    // Password validation (min 8, uppercase, lowercase, symbol)
-    let passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
-    if (!passwordPattern.test(password)) {
+    let pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
+    if (!pattern.test(password)) {
         passwordError.classList.remove("d-none");
-        return false;
+        return;
     }
 
-    // Confirm password match
     if (password !== confirmPassword) {
         confirmError.classList.remove("d-none");
-        return false;
+        return;
     }
 
-    return true;
-}
+    fetch("/api/register/jobseeker/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+        },
+        body: JSON.stringify({
+            full_name: document.getElementById("fullname").value,
+            email: document.getElementById("email").value,
+            password: password
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.message) {
+            successMsg.innerText = data.message;
+            successMsg.classList.remove("d-none");
+
+            setTimeout(() => {
+                window.location.href = "{% url 'accounts:login' %}";
+            }, 2000);
+        } else {
+            errorMsg.innerText = "Registration failed.";
+            errorMsg.classList.remove("d-none");
+        }
+    })
+    .catch(() => {
+        errorMsg.innerText = "Server error. Try again.";
+        errorMsg.classList.remove("d-none");
+    });
+});
 </script>
+
 
 {% include 'includes/footer.html' %}
 {% endblock %}

@@ -27,10 +27,17 @@ def register_jobseeker(request):
 @permission_classes([AllowAny])
 def register_company(request):
     serializer = CompanyRegisterSerializer(data=request.data)
+
     if serializer.is_valid():
         serializer.save()
-        return Response({"message": "Company registered successfully!"}, status=status.HTTP_201_CREATED)
+        return Response(
+            {"message": "Job Seeker registered successfully!"},
+            status=status.HTTP_201_CREATED
+        )
+
+    print(serializer.errors) 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @csrf_exempt
@@ -54,7 +61,7 @@ def login_user(request):
             if user_type == 'company' and not user.is_company:
                 return Response({"error": "Not a Company account."}, status=400)
 
-            # ✅ Proper session login
+            # Proper session login
             login(request, user)
 
             return Response(

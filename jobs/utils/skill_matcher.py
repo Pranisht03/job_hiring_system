@@ -31,29 +31,37 @@ def extract_cv_skills(cv_text, job_skills):
     return matched_skills
 
 
-def cosine_similarity(job_skills, cv_skills):
+def cosine_similarity(job_skills, applicant_skills):
     """
-    Apply cosine similarity on skill presence
+    Calculate cosine similarity between job_skills and applicant_skills.
+    Both inputs should be lists of lowercase strings.
+
+    Returns: similarity as percentage
     """
-    if not job_skills:
+
+    # normalize: lowercase and strip spaces
+    job_skills = [s.strip().lower() for s in job_skills]
+    applicant_skills = [s.strip().lower() for s in applicant_skills]
+
+    if not job_skills or not applicant_skills:
         return 0
 
-    job_vector = []
-    cv_vector = []
+    # Create simple bag-of-words vectors
+    all_skills = list(set(job_skills + applicant_skills))
+    job_vector = [1 if skill in job_skills else 0 for skill in all_skills]
+    applicant_vector = [1 if skill in applicant_skills else 0 for skill in all_skills]
 
-    for skill in job_skills:
-        job_vector.append(1)
-        cv_vector.append(1 if skill in cv_skills else 0)
+    # Cosine similarity
+    dot_product = sum(j * a for j, a in zip(job_vector, applicant_vector))
+    magnitude_job = math.sqrt(sum(j ** 2 for j in job_vector))
+    magnitude_applicant = math.sqrt(sum(a ** 2 for a in applicant_vector))
 
-    dot_product = sum(j * c for j, c in zip(job_vector, cv_vector))
-    magnitude_job = math.sqrt(sum(j * j for j in job_vector))
-    magnitude_cv = math.sqrt(sum(c * c for c in cv_vector))
-
-    if magnitude_cv == 0:
+    if magnitude_job == 0 or magnitude_applicant == 0:
         return 0
 
-    similarity = dot_product / (magnitude_job * magnitude_cv)
+    similarity = dot_product / (magnitude_job * magnitude_applicant)
     return round(similarity * 100, 2)
+
 
 
 # ================= Skill Gap Analysis =================

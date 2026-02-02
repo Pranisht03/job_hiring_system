@@ -21,31 +21,40 @@
                     </div>
                     {% endif %}
 
-                    <form method="POST" action="/api/register/company/" onsubmit="return validateCompanyForm()">
-                        {% csrf_token %}
+                <form id="companyForm">
+                    {% csrf_token %}
 
-                        <!-- Company Name -->
-                        <div class="mb-3"> <label class="form-label">Company Name:</label>
-                        <input type="text" class="form-control" id="companyName" name="company_name" required>
-                        </div>
-
-                        <!-- Company Email -->
-                         <div class="mb-3"> <label class="form-label">Company Email:</label>
-                        <input type="email" class="form-control" id="companyEmail" name="email" required>
-                         </div>
-
-                        <!-- Password -->
-                         <div class="mb-3"> <label class="form-label">Password:</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
-                         </div>
-
-                        <!-- Confirm Password -->
-                         <div class="mb-3"> <label class="form-label">Confirm Password:</label>
-                        <input type="password" class="form-control" id="confirmPassword" name="confirm_password" required>
-                         </div>
-
-                        <button type="submit" class="btn btn-dark w-100">Create Company Account</button>
-                    </form>
+                    <div class="mb-3">
+                        <label class="form-label">Company Name:</label>
+                        <input type="text" class="form-control" id="companyName" required>
+                    </div>
+                
+                    <div class="mb-3">
+                        <label class="form-label">Company Email:</label>
+                        <input type="email" class="form-control" id="companyEmail" required>
+                    </div>
+                
+                    <div class="mb-3">
+                        <label class="form-label">Password:</label>
+                        <input type="password" class="form-control" id="password" required>
+                        <small id="passwordError" class="text-danger d-none">
+                            Password must be 8+ chars with uppercase, lowercase & symbol
+                        </small>
+                    </div>
+                
+                    <div class="mb-3">
+                        <label class="form-label">Confirm Password:</label>
+                        <input type="password" class="form-control" id="confirmPassword" required>
+                        <small id="confirmError" class="text-danger d-none">
+                            Passwords do not match
+                        </small>
+                    </div>
+                
+                    <div id="successMsg" class="alert alert-success d-none"></div>
+                    <div id="errorMsg" class="alert alert-danger d-none"></div>
+                
+                    <button type="submit" class="btn btn-dark w-100">Create Company Account</button>
+                </form>
 
 
                     <p class="text-center mt-3">
@@ -59,33 +68,65 @@
 </div>
 
 <script>
-function validateCompanyForm() {
+document.getElementById("companyForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
     let password = document.getElementById("password").value;
     let confirmPassword = document.getElementById("confirmPassword").value;
 
     let passwordError = document.getElementById("passwordError");
     let confirmError = document.getElementById("confirmError");
+    let successMsg = document.getElementById("successMsg");
+    let errorMsg = document.getElementById("errorMsg");
 
-    // Hide errors initially
     passwordError.classList.add("d-none");
     confirmError.classList.add("d-none");
+    errorMsg.classList.add("d-none");
 
-    // Strong password validation
-    let passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
-    if (!passwordPattern.test(password)) {
+    let pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
+    if (!pattern.test(password)) {
         passwordError.classList.remove("d-none");
-        return false;
+        return;
     }
 
-    // Confirm password match
     if (password !== confirmPassword) {
         confirmError.classList.remove("d-none");
-        return false;
+        return;
     }
 
-    return true;
-}
+    fetch("/api/register/company/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+        },
+        body: JSON.stringify({
+            company_name: document.getElementById("companyName").value,
+            email: document.getElementById("companyEmail").value,
+            password: password
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.message) {
+            successMsg.innerText = data.message;
+            successMsg.classList.remove("d-none");
+
+            setTimeout(() => {
+                window.location.href = "{% url 'accounts:login' %}";
+            }, 2000);
+        } else {
+            errorMsg.innerText = "Registration failed.";
+            errorMsg.classList.remove("d-none");
+        }
+    })
+    .catch(() => {
+        errorMsg.innerText = "Server error. Try again.";
+        errorMsg.classList.remove("d-none");
+    });
+});
 </script>
+
 
 {% include 'includes/footer.html' %}
 {% endblock %}
