@@ -14,36 +14,46 @@ def clean_text(text):
     return text
 
 
-def extract_text_from_cv(file_field):
+def extract_text_from_cv(cv_file):
     """
-    Accepts a FileField (profile.cv), not raw path
+    Accepts either:
+    - Django FileField (profile.cv)
+    - or direct file path (string)
     """
-    if not file_field:
+
+    if not cv_file:
         return ""
 
-    try:
-        file_path = file_field.path
-    except Exception:
+    # 🔹 Determine file path safely
+    if hasattr(cv_file, "path"):
+        file_path = cv_file.path
+    elif isinstance(cv_file, str):
+        file_path = cv_file
+    else:
         return ""
 
     if not os.path.exists(file_path):
+        print("CV file not found:", file_path)
         return ""
 
     text = ""
 
     try:
-        if file_path.endswith(".pdf"):
+        if file_path.lower().endswith(".pdf"):
             reader = PdfReader(file_path)
             for page in reader.pages:
                 text += page.extract_text() or ""
 
-        elif file_path.endswith(".docx"):
+        elif file_path.lower().endswith(".docx"):
             doc = docx.Document(file_path)
             for para in doc.paragraphs:
                 text += para.text + " "
 
+        else:
+            print("Unsupported CV format:", file_path)
+
     except Exception as e:
-        print(f"CV parsing error: {e}")
+        print("CV parsing error:", e)
         return ""
 
     return clean_text(text)

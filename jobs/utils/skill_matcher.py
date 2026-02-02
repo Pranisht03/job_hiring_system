@@ -89,7 +89,7 @@ def analyze_skill_gap(job_skills_text, cv_text):
 
 def generate_explanation(score, matched, priority_missing):
     """
-    Human-readable explanation (for UI & viva)
+    Human-readable explanation
     """
     if score >= 80:
         return "Your profile is a strong match for this job."
