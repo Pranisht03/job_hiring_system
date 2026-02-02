@@ -1,0 +1,58 @@
+<div class="modal fade" id="applyModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-white">
+
+      <form method="POST"
+            action="{% url 'jobs:apply-job' 0 %}"
+            enctype="multipart/form-data"
+            id="applyForm">
+
+        {% csrf_token %}
+        <input type="hidden" name="job_id">
+
+        <div class="modal-header">
+          <h5 class="modal-title">Apply for Job</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+
+          <div class="mb-3">
+            <label>Name</label>
+            <input type="text" class="form-control"
+                   value="{{ user.full_name }}" readonly>
+          </div>
+
+          <div class="mb-3">
+            <label>Email</label>
+            <input type="email" class="form-control"
+                   value="{{ user.email }}" readonly>
+          </div>
+
+          <div class="mb-3">
+            <label>Phone Number</label>
+            <input type="text" name="phone" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label>Upload CV</label>
+            <input type="file" name="cv" class="form-control"
+                   accept=".pdf,.doc,.docx" required>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-success">
+            Submit Application
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>

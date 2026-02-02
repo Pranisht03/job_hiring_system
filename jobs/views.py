@@ -20,13 +20,31 @@ def home(request):
 
 
 @login_required
-def post_job(request):
+def post_job(request, job_id=None):
     if not request.user.is_company:
         messages.error(request, "You are not authorized to post jobs.")
         return redirect("home")
 
+    job_data = None
+
+    # Job types for template (NO Python logic in template)
+    job_types = ["Full-time", "Part-time", "Internship", "Remote"]
+
+    # ================= EDIT MODE =================
+    if job_id:
+        job_data = get_object_or_404(
+            Job,
+            id=job_id,
+            company=request.user
+        )
+
+    # ================= POST REQUEST =================
     if request.method == "POST":
         data = request.POST.copy()
+
+        # If editing, send job_id to API
+        if job_id:
+            data["job_id"] = job_id
 
         factory = APIRequestFactory()
         api_request = factory.post("/api/jobs/post/", data)
@@ -35,16 +53,22 @@ def post_job(request):
 
         response = PostJobAPIView.as_view()(api_request)
 
-        if response.status_code == 201:
-            messages.success(request, "Job posted successfully!")
-            return redirect("accounts:company-dashboard")
+        if response.status_code in (200, 201):
+            messages.success(
+                request,
+                "Job updated successfully!" if job_id else "Job posted successfully!"
+            )
+            return redirect("jobs:manage-jobs")
 
         messages.error(request, response.data)
 
+    # ================= RENDER FORM =================
     return render(request, "jobs/post_jobs.html", {
-        "company_name": request.user.username
+        "company_name": request.user.username,
+        "job": job_data,
+        "is_edit": bool(job_id),
+        "job_types": job_types,
     })
-
 
 # =====================================================
 # JOB LIST VIEW
@@ -108,36 +132,41 @@ def job_list(request):
 # =====================================================
 @login_required
 def apply_job(request, job_id):
-    if not request.user.is_job_seeker:
+
+    # Only job seekers can apply
+    if not getattr(request.user, "is_job_seeker", False):
         messages.error(request, "Only job seekers can apply for jobs.")
-        return redirect("jobs:job-list")
+        return redirect(request.META.get("HTTP_REFERER", "jobs:job-list"))
 
     job = get_object_or_404(Job, id=job_id, is_active=True)
 
+    # Prevent duplicate applications
     if JobApplicant.objects.filter(job=job, applicant=request.user).exists():
         messages.warning(request, "You have already applied for this job.")
-        return redirect("jobs:job-list")
+        return redirect(request.META.get("HTTP_REFERER", "jobs:job-list"))
 
-    if request.method == "POST":
-        phone = request.POST.get("phone")
-        cv = request.FILES.get("cv")
+    # Only accept POST
+    if request.method != "POST":
+        messages.error(request, "Invalid request.")
+        return redirect(request.META.get("HTTP_REFERER", "jobs:job-list"))
 
-        if not phone or not cv:
-            messages.error(request, "All fields are required.")
-            return redirect("jobs:job-list")
+    phone = request.POST.get("phone")
+    cv = request.FILES.get("cv")
 
-        JobApplicant.objects.create(
-            job=job,
-            applicant=request.user,
-            phone=phone,
-            cv=cv
-        )
+    if not phone or not cv:
+        messages.error(request, "Phone number and CV are required.")
+        return redirect(request.META.get("HTTP_REFERER", "jobs:job-list"))
 
-        messages.success(request, "Job applied successfully!")
-        return redirect("jobs:job-list")
+    # Create application
+    JobApplicant.objects.create(
+        job=job,
+        applicant=request.user,
+        phone=phone,
+        cv=cv
+    )
 
-    messages.error(request, "Invalid request.")
-    return redirect("jobs:job-list")
+    messages.success(request, "Job applied successfully!")
+    return redirect(request.META.get("HTTP_REFERER", "jobs:job-list"))
 
 
 # =====================================================
@@ -165,3 +194,37 @@ def job_detail(request, job_id):
         "job": job,
         "analysis": analysis
     })
+
+
+@login_required
+def manage_jobs(request):
+    if not request.user.is_company:
+        messages.error(request, "Unauthorized access.")
+        return redirect("jobs:job-list")
+
+    jobs = (
+        Job.objects
+        .filter(company=request.user)
+        .prefetch_related("applications")
+        .order_by("-created_at")
+    )
+
+    return render(request, "accounts/manage_jobs.html", {
+        "jobs": jobs
+    })
+
+
+@login_required
+def delete_job(request, job_id):
+    if not request.user.is_company:
+        messages.error(request, "Unauthorized access.")
+        return redirect("jobs:job-list")
+
+    job = get_object_or_404(Job, id=job_id, company=request.user)
+
+    if request.method == "POST":
+        job.delete()
+        messages.success(request, "Job deleted successfully.")
+        return redirect("jobs:manage-jobs")
+
+    return redirect("jobs:manage-jobs")

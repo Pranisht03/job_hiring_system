@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status, permissions
 from .serializers import JobSeekerRegisterSerializer, CompanyRegisterSerializer, LoginSerializer, JobSeekerProfileSerializer, JobSerializer
 from django.contrib.auth import authenticate, login
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
@@ -104,26 +105,43 @@ def save_jobseeker_profile(request):
     return Response(serializer.errors, status=400)
 
 
+
 class PostJobAPIView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         user = request.user
 
-        if not user.is_company:
+        # ================ COMPANY CHECK =================
+        if not hasattr(user, 'is_company') or not user.is_company:
             return Response(
                 {"error": "Only companies can post jobs"},
                 status=status.HTTP_403_FORBIDDEN
             )
 
-        serializer = JobSerializer(data=request.data)
+        data = request.data
+        job_id = data.get("job_id")
+
+        # ================= EDIT MODE =================
+        if job_id:
+            job = get_object_or_404(Job, id=job_id, company=user)
+            serializer = JobSerializer(job, data=data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(
+                    {"message": "Job updated successfully"},
+                    status=status.HTTP_200_OK
+                )
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        # ================= CREATE MODE =================
+        serializer = JobSerializer(data=data)
         if serializer.is_valid():
             serializer.save(company=user)
             return Response(
                 {"message": "Job posted successfully"},
                 status=status.HTTP_201_CREATED
             )
-
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class JobListAPIView(APIView):

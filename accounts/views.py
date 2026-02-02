@@ -41,12 +41,6 @@ def jobseeker_dashboard(request):
     }
     return render(request, 'accounts/jobseeker_dashboard.html', context)
 
-@login_required
-def manage_applicants(request):
-    if not request.user.is_company:
-        # Optional: redirect if user is not a company
-        return redirect('accounts:login')
-    return render(request, "accounts/manage_applicants.html")
 
 @login_required
 def jobseeker_profile(request):
@@ -55,23 +49,6 @@ def jobseeker_profile(request):
 
     return render(request, 'accounts/jobseeker_profile.html')
 
-
-@login_required
-def manage_jobs(request):
-    # Only allow company users
-    if not request.user.is_company:
-        messages.error(request, "Access denied. You are not a company user.")
-        return redirect("home")  # or wherever suitable
-
-    # Get jobs posted by this company
-    jobs = Job.objects.filter(company=request.user).order_by('-created_at')
-
-    # Search functionality
-    query = request.GET.get('q')
-    if query:
-        jobs = jobs.filter(job_title__icontains=query)
-
-    return render(request, "accounts/manage_jobs.html", {"jobs": jobs})
 
 @login_required
 @require_POST

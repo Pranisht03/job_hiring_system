@@ -1,47 +1,86 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from jobs.models import Job
+from accounts.models import CustomUser
 from .models import JobApplicant
-from django.contrib import messages
+from jobs.utils.skill_matcher import cosine_similarity  # your existing function
 
 @login_required
 def manage_applicants(request):
-    user = request.user
-    if not user.is_company:
-        messages.error(request, "Access denied.")
-        return redirect("home")
+    """
+    Company dashboard: manage applicants
+    """
+    # Only applicants for jobs posted by this company
+    applications = JobApplicant.objects.filter(
+        job__company=request.user
+    ).select_related("job", "applicant").order_by("-applied_at")
 
-    # Filter by match score if provided
-    match_filter = request.GET.get("match", "")
-    applicants = JobApplicant.objects.filter(job__company=user).select_related('job', 'applicant')
+    # Filters
+    status = request.GET.get("status")
+    job_id = request.GET.get("job")
+    top = request.GET.get("top")
 
-    if match_filter:
+    if status:
+        applications = applications.filter(status=status)
+
+    if job_id:
         try:
-            match_filter = int(match_filter)
-            applicants = applicants.filter(match_score__gte=match_filter)
+            job_id_int = int(job_id)
+            applications = applications.filter(job_id=job_id_int)
         except ValueError:
-            pass
+            job_id_int = None
+    else:
+        job_id_int = None
 
-    return render(request, "accounts/manage_applicants.html", {
-        "applicants": applicants,
-        "match_filter": match_filter,
-    })
+    applicant_data = []
+
+    for app in applications:
+        # Extract skills lists for cosine_similarity
+        # job.skills_required is comma-separated string
+        job_skills = [s.strip() for s in app.job.skills_required.split(",")] if app.job.skills_required else []
+
+        # cv_skills: you must decide where the applicant skills come from
+        # If you don't store skills in model, just pass empty list for now
+        cv_skills = []  # placeholder if not storing skills in user
+        # If you are parsing CV or another field, fill cv_skills here
+
+        score = cosine_similarity(job_skills, cv_skills)
+
+        # Top applicants filter
+        if top == "1" and score < 70:
+            continue
+
+        applicant_data.append({
+            "app": app,
+            "match_score": score,
+        })
+
+    # Jobs posted by this company (for dropdown)
+    jobs = Job.objects.filter(company=request.user)
+
+    return render(
+        request,
+        "accounts/manage_applicants.html",
+        {
+            "applicants": applicant_data,
+            "jobs": jobs,
+            "selected_status": status,
+            "selected_job": job_id_int or "",
+            "selected_top": top,
+        }
+    )
 
 
 @login_required
-def update_application_status(request, pk, status):
-    user = request.user
-    if not user.is_company:
-        messages.error(request, "Access denied.")
-        return redirect("home")
+def update_application_status(request, app_id, status):
+    application = get_object_or_404(
+        JobApplicant,
+        id=app_id,
+        job__company=request.user
+    )
 
-    application = get_object_or_404(JobApplicant, pk=pk, job__company=user)
+    if status in ["accepted", "rejected"]:
+        application.status = status
+        application.save()
 
-    if status not in ["accepted", "rejected"]:
-        messages.error(request, "Invalid status")
-        return redirect("jobs:manage-applicants")
-
-    application.status = status
-    application.save()
-    messages.success(request, f"Application {status} successfully.")
-    return redirect("accounts:manage_applicants")
+    return redirect("applications:manage_applicants")
