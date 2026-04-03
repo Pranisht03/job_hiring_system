@@ -34,13 +34,17 @@ def company_signup_page(request):
 @login_required
 def jobseeker_dashboard(request):
     # Get all jobs applied by the logged-in user
-    applied_jobs = JobApplicant.objects.filter(applicant=request.user)
+    applied_jobs = JobApplicant.objects.filter(
+        applicant=request.user
+    ).select_related("job", "job__company").order_by("-applied_at")
 
     context = {
         'applied_jobs': applied_jobs,
+        'pending_count': applied_jobs.filter(status="pending").count(),
+        'accepted_count': applied_jobs.filter(status="accepted").count(),
+        'rejected_count': applied_jobs.filter(status="rejected").count(),
     }
     return render(request, 'accounts/jobseeker_dashboard.html', context)
-
 
 @login_required
 def jobseeker_profile(request):

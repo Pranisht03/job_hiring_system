@@ -27,9 +27,7 @@
       <div class="card shadow-sm border-0 text-center">
         <div class="card-body">
           <h6 class="text-muted">Pending</h6>
-          <h3 class="fw-bold text-warning">
-            {{ applied_jobs|dictsort:"status"|length }}
-          </h3>
+          <h3 class="fw-bold text-warning">{{ pending_count }}</h3>
         </div>
       </div>
     </div>
@@ -38,9 +36,7 @@
       <div class="card shadow-sm border-0 text-center">
         <div class="card-body">
           <h6 class="text-muted">Accepted</h6>
-          <h3 class="fw-bold text-success">
-            {{ accepted_count|default:"0" }}
-          </h3>
+          <h3 class="fw-bold text-success">{{ accepted_count }}</h3>
         </div>
       </div>
     </div>
@@ -49,9 +45,7 @@
       <div class="card shadow-sm border-0 text-center">
         <div class="card-body">
           <h6 class="text-muted">Rejected</h6>
-          <h3 class="fw-bold text-danger">
-            {{ rejected_count|default:"0" }}
-          </h3>
+          <h3 class="fw-bold text-danger">{{ rejected_count }}</h3>
         </div>
       </div>
     </div>
@@ -109,9 +103,7 @@
                 {% endif %}
               </td>
 
-              <td>
-                {{ application.applied_at|date:"d M Y" }}
-              </td>
+              <td>{{ application.applied_at|date:"d M Y" }}</td>
 
               <td>
                 {% if application.status == "pending" %}
@@ -138,9 +130,7 @@
       {% else %}
         <div class="text-center py-5">
           <img src="{% static 'images/no-data.svg' %}" width="180" class="mb-3">
-          <p class="text-muted">
-            You haven’t applied to any jobs yet.
-          </p>
+          <p class="text-muted">You haven't applied to any jobs yet.</p>
           <a href="{% url 'jobs:job-list' %}" class="btn btn-primary">
             Browse Jobs
           </a>
