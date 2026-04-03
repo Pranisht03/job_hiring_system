@@ -2,136 +2,1006 @@
 {% load static %}
 {% block content %}
 
-<!-- ================= HERO SECTION ================= -->
-<section class="hero-section text-white text-center">
+<style>
+
+/* ===== RESET PAGE GAP ISSUE ===== */
+
+html,body{
+    margin:0;
+    padding:0;
+    width:100%;
+    overflow-x:hidden;
+}
+
+.container{
+    max-width:1200px;
+}
+
+/* ===== COLORS ===== */
+
+:root{
+    --navy:#0f172a;
+    --navy-soft:#1e293b;
+    --accent:#2563eb;
+    --bg:#f8fafc;
+    --border:#e2e8f0;
+    --text:#334155;
+}
+
+/* ===== HERO SECTION ===== */
+
+.hero{
+    background:linear-gradient(120deg,var(--navy),#1e3a8a);
+    padding:0 0 0 0;
+    color:white;
+    position:relative;
+    overflow:hidden;
+}
+
+.hero-title{
+    font-size:3rem;
+    font-weight:600;
+    line-height:1.2;
+}
+
+.hero-title em{
+    color:#93c5fd;
+    font-style:normal;
+}
+
+.hero-sub{
+    opacity:.85;
+    margin-top:15px;
+    max-width:520px;
+}
+
+.hero-label{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:rgba(255,255,255,.12);
+    padding:6px 14px;
+    border-radius:40px;
+    font-size:.8rem;
+    margin-bottom:15px;
+}
+
+.live-dot{
+    width:8px;
+    height:8px;
+    background:#10b981;
+    border-radius:50%;
+}
+/* ===== BUTTONS ===== */
+
+.btn-ink{
+    background:var(--accent);
+    color:white;
+    padding:12px 22px;
+    border-radius:8px;
+    font-weight:500;
+    text-decoration:none;
+    transition:.25s;
+}
+
+.btn-ink:hover{
+    background:#1d4ed8;
+    transform:translateY(-2px);
+}
+
+.btn-outline{
+    border:1px solid rgba(255,255,255,.4);
+    padding:12px 20px;
+    border-radius:8px;
+    color:white;
+    text-decoration:none;
+}
+
+.hero-ctas{
+    display:flex;
+    gap:14px;
+    margin-top:25px;
+}
+
+
+/* ===== HERO STATS ===== */
+
+.hero-stats{
+    display:flex;
+    gap:30px;
+    margin-top:35px;
+}
+
+.stat-num{
+    font-size:1.4rem;
+    font-weight:600;
+}
+
+.stat-lbl{
+    font-size:.8rem;
+    opacity:.8;
+}
+
+.stat-sep{
+    width:1px;
+    background:rgba(255,255,255,.2);
+}
+
+
+/* ===== MATCH CARDS ===== */
+
+.hero-visual{
+    position:relative;
+}
+
+.match-card{
+    background:white;
+    color:#1e293b;
+    border-radius:14px;
+    padding:22px;
+    box-shadow:0 20px 40px rgba(0,0,0,.15);
+    max-width:300px;
+}
+
+.match-card-2{
+    position:absolute;
+    top:120px;
+    right:0;
+}
+
+.mc-head{
+    display:flex;
+    gap:12px;
+    margin-bottom:12px;
+}
+
+.mc-logo{
+    font-size:1.4rem;
+}
+
+.mc-name{
+    font-weight:600;
+}
+
+.mc-company{
+    font-size:.8rem;
+    color:#64748b;
+}
+
+.mc-bar-bg{
+    height:6px;
+    background:#e2e8f0;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.mc-bar{
+    height:100%;
+}
+
+.bar-green{
+    background:#10b981;
+}
+
+.bar-blue{
+    background:#3b82f6;
+}
+
+.mc-tag{
+    margin-top:10px;
+    display:inline-block;
+    font-size:.7rem;
+}
+
+.tag-green{color:#059669;}
+.tag-blue{color:#2563eb;}
+
+/* ===== HERO VISUAL FIX ===== */
+
+.hero-visual{
+    position:relative;
+    display:flex;
+    justify-content:center;
+}
+
+.match-card{
+    background:white;
+    border-radius:14px;
+    padding:22px;
+    max-width:300px;
+    box-shadow:0 20px 40px rgba(0,0,0,.15);
+}
+
+.match-card-2{
+    position:absolute;
+    top:120px;
+    right:40px;
+}
+
+/* ===== SEARCH SECTION FIX ===== */
+
+.search-wrap{
+    margin-top:-60px;
+    position:relative;
+    z-index:5;
+}
+
+.search-box{
+    background:white;
+    padding:18px;
+    border-radius:12px;
+    box-shadow:0 15px 35px rgba(0,0,0,.15);
+    display:flex;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.search-input{
+    border:none;
+    outline:none;
+    flex:1;
+}
+
+.search-submit{
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:10px 20px;
+    border-radius:8px;
+}
+
+/* ===== POPULAR SEARCH CARDS ===== */
+
+.search-pills{
+    margin-top:18px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.pill-lbl{
+    font-size:.8rem;
+    color:#64748b;
+    margin-right:5px;
+}
+
+.pill{
+    text-decoration:none;
+    background:white;
+    border:1px solid #e2e8f0;
+    padding:8px 14px;
+    border-radius:25px;
+    font-size:.8rem;
+    color:#1e293b;
+    transition:.2s;
+}
+
+.pill:hover{
+    background:#2563eb;
+    color:white;
+    border-color:#2563eb;
+}
+
+/* ===== JOB CARDS ===== */
+
+.job-card{
+    background:white;
+    border-radius:14px;
+    padding:22px;
+    border:1px solid #e2e8f0;
+    transition:.25s;
+    height:100%;
+}
+
+.job-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 12px 30px rgba(0,0,0,.1);
+}
+
+.jc-title{
+    font-weight:600;
+}
+
+.jc-company{
+    font-size:.85rem;
+    color:#64748b;
+}
+
+.jc-meta{
+    margin-top:10px;
+    font-size:.8rem;
+    display:flex;
+    gap:14px;
+}
+
+.jc-tags{
+    margin-top:12px;
+}
+
+.jc-tag{
+    background:#eef2ff;
+    padding:5px 10px;
+    border-radius:20px;
+    font-size:.7rem;
+}
+
+.jc-btn{
+    margin-top:14px;
+    display:inline-block;
+    text-decoration:none;
+    color:white;
+    background:#2563eb;
+    padding:8px 16px;
+    border-radius:6px;
+}
+
+.jc-btn:hover{
+    background:#1d4ed8;
+}
+
+/* ===== SECTION SPACING ===== */
+
+.sec{
+    padding:80px 0;
+}
+
+.sec-alt{
+    padding:80px 0;
+    background:#f1f5f9;
+}
+
+.sec-title{
+    font-size:2rem;
+    font-weight:600;
+}
+
+.sec-sub{
+    color:#64748b;
+}
+
+/* ===== FEATURE CARDS ===== */
+.feat-card{
+    background:white;
+    border-radius:12px;
+    padding:28px;
+    border:1px solid var(--border);
+    text-align:center;
+    transition:.25s;
+}
+
+.feat-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.feat-ico{
+    font-size:26px;
+    margin-bottom:10px;
+}
+
+.feat-title{
+    font-weight:600;
+}
+
+/* ===== STEPS ===== */
+
+.step{
+    display:flex;
+    gap:20px;
+}
+
+.step-num{
+    width:36px;
+    height:36px;
+    background:var(--accent);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+}
+
+.step-line{
+    height:20px;
+}
+
+/* ===== TABS ===== */
+
+.tab-row{
+    display:flex;
+    gap:10px;
+}
+
+.tab-btn{
+    padding:8px 14px;
+    border-radius:20px;
+    border:1px solid #e2e8f0;
+    background:white;
+    cursor:pointer;
+}
+
+.tab-btn.active{
+    background:#2563eb;
+    color:white;
+}
+
+.tab-pane{
+    display:none;
+}
+
+.tab-pane.active{
+    display:block;
+}
+
+/* ===== CTA ===== */
+
+.cta-wrap{
+    background:linear-gradient(120deg,#1e3a8a,#2563eb);
+    padding:90px 0;
+    color:white;
+}
+
+.cta-inner{
+    text-align:center;
+}
+
+.cta-title{
+    font-size:2.2rem;
+    font-weight:600;
+}
+
+.cta-btns{
+    margin-top:25px;
+}
+
+.btn-cta-w{
+    background:white;
+    color:#1e3a8a;
+    padding:12px 22px;
+    border-radius:8px;
+    margin-right:10px;
+    text-decoration:none;
+}
+
+.btn-cta-g{
+    border:1px solid white;
+    padding:12px 22px;
+    border-radius:8px;
+    color:white;
+    text-decoration:none;
+}
+
+.view-all{
+    text-align:center;
+    margin-top:40px;
+}
+
+.view-all-btn{
+    text-decoration:none;
+    color:var(--accent);
+    font-weight:500;
+}
+
+
+</style>
+
+<!-- ════════ HERO ════════ -->
+<section class="hero">
+  <div class="hero-deco"></div>
+  <div class="hero-deco hero-deco-2"></div>
   <div class="container">
-    <h1 class="fw-bold">Find Your Dream Job with AI Matching</h1>
-    <p class="lead mt-3">
-      Personalized job recommendations based on your skills and profile
-    </p>
-        {% if user.is_authenticated and user.is_job_seeker %}
-        <a href="{% url 'jobs:job-list' %}" class="btn btn-light btn-lg mt-3">
-          Browse Jobs
+    <div class="row align-items-center g-5">
+
+      <!-- Left -->
+      <div class="col-lg-6 hero-content">
+        <div class="hero-label">
+          <span class="live-dot"></span>
+          AI-Powered · Live Matching
+        </div>
+
+        <h1 class="hero-title">
+          Find Work That<br>Fits <em>You</em> Perfectly
+        </h1>
+
+        <p class="hero-sub">
+          Upload your CV and let our AI match you to jobs tailored to your exact skills, experience, and goals — not just keywords.
+        </p>
+
+        <div class="hero-ctas">
+          {% if user.is_authenticated and user.is_job_seeker %}
+            <a href="{% url 'jobs:job-list' %}" class="btn-ink btn-accent-fill">
+              <i class="bi bi-briefcase"></i> Browse Jobs
             </a>
-        {% elif user.is_authenticated and user.is_company %}
-            <a href="{% url 'jobs:post-job' %}" class="btn btn-light btn-lg mt-3">
-              Post Jobs
+            <a href="{% url 'accounts:jobseeker_profile' %}" class="btn-outline">
+              <i class="bi bi-person-circle"></i> My Profile
             </a>
-        {% else %}
-            <a href="{% url 'accounts:login' %}" class="btn btn-outline-light btn-lg mt-3">
-              Get Started
+          {% elif user.is_authenticated and user.is_company %}
+            <a href="{% url 'jobs:post-job' %}" class="btn-ink">
+              <i class="bi bi-plus-circle"></i> Post a Job
             </a>
-        {% endif %}
-</section>
+            <a href="{% url 'jobs:job-list' %}" class="btn-outline">
+              <i class="bi bi-eye"></i> View Listings
+            </a>
+          {% else %}
+            <a href="{% url 'accounts:signup' %}" class="btn-ink">
+              <i class="bi bi-arrow-right-circle"></i> Get Started Free
+            </a>
+            <a href="{% url 'accounts:login' %}" class="btn-outline">
+              <i class="bi bi-box-arrow-in-right"></i> Sign In
+            </a>
+          {% endif %}
+        </div>
 
-<!-- ================= RECOMMENDED JOBS ================= -->
-<section class="container my-5">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="fw-bold">
-      🎯 Recommended Jobs
-    </h3>
-    <span class="badge bg-success">Match Score ≥ 90%</span>
-  </div>
-
-  {% if recommended_jobs %}
-  <div class="row g-4">
-    {% for job in recommended_jobs %}
-      {% if job.match_score >= 90 %}
-      <div class="col-md-4">
-        <div class="card job-card shadow-sm h-100">
-          <div class="card-body">
-
-            <div class="d-flex justify-content-between">
-              <h5 class="card-title fw-bold">{{ job.title }}</h5>
-              <span class="badge bg-success">
-                {{ job.match_score }}%
-              </span>
-            </div>
-
-            <p class="text-muted mb-1">
-              <i class="bi bi-building"></i> {{ job.company.name }}
-            </p>
-
-            <p class="text-muted mb-1">
-              <i class="bi bi-geo-alt"></i> {{ job.location }}
-            </p>
-
-            <span class="badge bg-primary mt-2">
-              {{ job.job_type }}
-            </span>
-
-            <div class="mt-4">
-              <a href="{% url 'jobs:job_detail' job.id %}"
-                 class="btn btn-outline-primary w-100">
-                View Job
-              </a>
-            </div>
-
+        <div class="hero-stats">
+          <div>
+            <div class="stat-num">10K+</div>
+            <div class="stat-lbl">Active Jobs</div>
+          </div>
+          <div class="stat-sep"></div>
+          <div>
+            <div class="stat-num">3K+</div>
+            <div class="stat-lbl">Companies</div>
+          </div>
+          <div class="stat-sep"></div>
+          <div>
+            <div class="stat-num">95%</div>
+            <div class="stat-lbl">Match Accuracy</div>
           </div>
         </div>
       </div>
-      {% endif %}
-    {% endfor %}
-  </div>
-  {% else %}
-    <div class="alert alert-warning text-center">
-      No recommended jobs found. Complete your profile to get better matches.
-    </div>
-  {% endif %}
-</section>
 
-<!-- ================= WHY CHOOSE US ================= -->
-<section class="bg-light py-5">
-  <div class="container">
-    <h3 class="text-center fw-bold mb-5">Why Choose Our Platform?</h3>
+      <!-- Right: floating cards -->
+      <div class="col-lg-6 hero-visual-col">
+        <div class="hero-visual">
+          <div class="match-card">
+            <div class="mc-head">
+              <div class="mc-logo">💼</div>
+              <div>
+                <div class="mc-name">Senior Product Designer</div>
+                <div class="mc-company">Figma · Remote</div>
+              </div>
+            </div>
+            <div class="mc-score-row">
+              <span class="mc-lbl">AI Match Score</span>
+              <span class="mc-val-green">96%</span>
+            </div>
+            <div class="mc-bar-bg"><div class="mc-bar bar-green" style="width:96%"></div></div>
+            <span class="mc-tag tag-green"><i class="bi bi-check-circle-fill"></i> Top Match</span>
+          </div>
 
-    <div class="row text-center g-4">
-      <div class="col-md-4">
-        <div class="feature-box p-4 shadow-sm">
-          <i class="bi bi-cpu feature-icon"></i>
-          <h5 class="fw-bold mt-3">AI-Powered Matching</h5>
-          <p class="text-muted">
-            Smart job recommendations using cosine similarity algorithm.
-          </p>
+          <div class="match-card match-card-2">
+            <div class="mc-head">
+              <div class="mc-logo">🚀</div>
+              <div>
+                <div class="mc-name">Full Stack Engineer</div>
+                <div class="mc-company">Stripe · Hybrid</div>
+              </div>
+            </div>
+            <div class="mc-score-row">
+              <span class="mc-lbl">AI Match Score</span>
+              <span class="mc-val-blue">88%</span>
+            </div>
+            <div class="mc-bar-bg"><div class="mc-bar bar-blue" style="width:88%"></div></div>
+            <span class="mc-tag tag-blue"><i class="bi bi-lightning-fill"></i> Strong Match</span>
+          </div>
         </div>
       </div>
 
-      <div class="col-md-4">
-        <div class="feature-box p-4 shadow-sm">
-          <i class="bi bi-briefcase feature-icon"></i>
-          <h5 class="fw-bold mt-3">Verified Companies</h5>
-          <p class="text-muted">
-            Apply confidently to trusted and verified employers.
-          </p>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="feature-box p-4 shadow-sm">
-          <i class="bi bi-graph-up feature-icon"></i>
-          <h5 class="fw-bold mt-3">Career Growth</h5>
-          <p class="text-muted">
-            Find jobs that truly match your skills and experience.
-          </p>
-        </div>
-      </div>
     </div>
   </div>
 </section>
 
-<!-- ================= CALL TO ACTION ================= -->
-<section class="cta-section text-center text-white">
+<!-- ════════ SEARCH ════════ -->
+{% if user.is_job_seeker or not user.is_authenticated %}
+<section class="search-wrap">
   <div class="container">
-    <h2 class="fw-bold">Ready to Take the Next Step?</h2>
-    <p class="lead mt-2">
-      Upload your CV and let AI find the best job for you
-    </p>
-    {% if user.is_job_seeker %}
-    <a href="{% url 'accounts:jobseeker_profile' %}" class="btn btn-light btn-lg mt-3">
-      Complete Your Profile
-    </a>
+    <form method="GET" action="{% url 'jobs:job-list' %}">
+      <div class="search-box">
+        <div class="search-ico"><i class="bi bi-search"></i></div>
+        <input type="text" name="q" class="search-input" placeholder="Job title, skills, or keyword…">
+        <div class="search-sep"></div>
+        <div class="search-ico search-loc"><i class="bi bi-geo-alt"></i></div>
+        <input type="text" name="location" class="search-input search-loc" placeholder="Location…" style="max-width:175px;">
+        <button class="search-submit" type="submit">
+          <i class="bi bi-search"></i> Find Jobs
+        </button>
+      </div>
+    </form>
+    <div class="search-pills">
+      <span class="pill-lbl">Popular:</span>
+      <a href="{% url 'jobs:job-list' %}?q=python"      class="pill">Python</a>
+      <a href="{% url 'jobs:job-list' %}?q=react"       class="pill">React</a>
+      <a href="{% url 'jobs:job-list' %}?q=design"      class="pill">UI/UX Design</a>
+      <a href="{% url 'jobs:job-list' %}?q=data+science" class="pill">Data Science</a>
+      <a href="{% url 'jobs:job-list' %}?q=remote"      class="pill">Remote</a>
+      <a href="{% url 'jobs:job-list' %}?q=marketing"   class="pill">Marketing</a>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ════════ JOBS ════════ -->
+{% if user.is_authenticated and user.is_job_seeker %}
+<section class="sec-alt">
+  <div class="container">
+
+    {% if not user.jobseekerprofile.resume %}
+    <div class="pb">
+      <div class="pb-inner">
+        <div class="pb-ico"><i class="bi bi-upload"></i></div>
+        
+      </div>
+     
+    </div>
     {% endif %}
+
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-5">
+      <div>
+        <div class="eyebrow"><i class="bi bi-stars"></i> Personalised for you</div>
+        <h2 class="sec-title">Your Job Feed</h2>
+        <p class="sec-sub">AI-matched picks and latest openings in one place</p>
+      </div>
+      <div class="tab-row">
+        <button class="tab-btn active" onclick="switchTab('recommended',this)">🎯 Recommended</button>
+        <button class="tab-btn" onclick="switchTab('all',this)">🌐 All Jobs</button>
+      </div>
+    </div>
+
+    <!-- Recommended -->
+    <div class="tab-pane active" id="tab-recommended">
+      {% with rec=jobs|dictsortreversed:"match_score" %}
+      {% if rec %}
+        <div class="row g-4">
+          {% for job in rec %}
+          {% if job.match_score >= 50 %}
+          <div class="col-sm-6 col-lg-4">
+            <div class="job-card {% if job.match_score >= 80 %}job-card-rec{% endif %}">
+              <div class="d-flex align-items-start justify-content-between gap-2 mb-3">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="jc-logo">🏢</div>
+                  <div>
+                    <div class="jc-title">{{ job.title }}</div>
+                    <div class="jc-company">{{ job.company.name }}</div>
+                  </div>
+                </div>
+                <span class="score-badge {% if job.match_score >= 80 %}s-high{% elif job.match_score >= 60 %}s-mid{% else %}s-low{% endif %}">
+                  <i class="bi bi-lightning-charge-fill"></i> {{ job.match_score }}%
+                </span>
+              </div>
+              <div class="match-bar">
+                <div class="match-bar-fill {% if job.match_score >= 80 %}fill-green{% elif job.match_score >= 60 %}fill-amber{% else %}fill-grey{% endif %}"
+                     style="width:10%"></div>
+              </div>
+              <div class="jc-meta">
+                <div class="jc-meta-item"><i class="bi bi-geo-alt"></i> {{ job.location }}</div>
+                <div class="jc-meta-item"><i class="bi bi-clock"></i> {{ job.created_at|timesince }} ago</div>
+              </div>
+              <div class="jc-tags">
+                <span class="jc-tag jc-tag-type">{{ job.job_type }}</span>
+                {% if job.salary_range %}<span class="jc-tag">{{ job.salary_range }}</span>{% endif %}
+              </div>
+              <a href="{% url 'jobs:job_detail' job.id %}" class="jc-btn jc-btn-filled">
+                View & Apply <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+          {% endif %}
+          {% empty %}
+          <div class="col-12">
+            <div class="empty">
+              <div class="empty-ico">🎯</div>
+              <h5>No recommendations yet</h5>
+              <p>Complete your profile and upload your CV to get AI-powered matches.</p>
+              <a href="{% url 'accounts:jobseeker_profile' %}" class="btn-ink d-inline-flex mt-3" style="font-size:.84rem;padding:10px 18px;">
+                Complete Profile <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty">
+          <div class="empty-ico">🎯</div>
+          <h5>No matches yet</h5>
+          <p>Upload your CV to unlock personalised job recommendations.</p>
+        </div>
+      {% endif %}
+      {% endwith %}
+      <div class="view-all">
+        <a href="{% url 'jobs:job-list' %}" class="view-all-btn">See all jobs <i class="bi bi-arrow-right"></i></a>
+      </div>
+    </div>
+
+    <!-- All Jobs -->
+    <div class="tab-pane" id="tab-all">
+      {% if all_jobs %}
+        <div class="row g-4">
+          {% for job in all_jobs %}
+          <div class="col-sm-6 col-lg-4">
+            <div class="job-card">
+              <div class="d-flex align-items-start justify-content-between gap-2 mb-3">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="jc-logo">🏢</div>
+                  <div>
+                    <div class="jc-title">{{ job.title }}</div>
+                    <div class="jc-company">{{ job.company.name }}</div>
+                  </div>
+                </div>
+                <span class="score-badge s-new"><i class="bi bi-clock"></i> New</span>
+              </div>
+              <div class="jc-meta">
+                <div class="jc-meta-item"><i class="bi bi-geo-alt"></i> {{ job.location }}</div>
+                <div class="jc-meta-item"><i class="bi bi-clock"></i> {{ job.created_at|timesince }} ago</div>
+              </div>
+              <div class="jc-tags">
+                <span class="jc-tag jc-tag-type">{{ job.job_type }}</span>
+                {% if job.salary_range %}<span class="jc-tag">{{ job.salary_range }}</span>{% endif %}
+              </div>
+              <a href="{% url 'jobs:job_detail' job.id %}" class="jc-btn">View Details <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty">
+          <div class="empty-ico">🌐</div>
+          <h5>No jobs yet</h5>
+          <p>New listings are added daily — check back soon.</p>
+        </div>
+      {% endif %}
+      <div class="view-all">
+        <a href="{% url 'jobs:job-list' %}" class="view-all-btn">Browse all jobs <i class="bi bi-arrow-right"></i></a>
+      </div>
+    </div>
+
   </div>
 </section>
+
+{% elif user.is_authenticated and user.is_company %}
+<!-- Company view -->
+<section class="sec-alt">
+  <div class="container">
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-5">
+      <div>
+        <div class="eyebrow"><i class="bi bi-building"></i> Company</div>
+        <h2 class="sec-title">Latest Listings</h2>
+        <p class="sec-sub">Recently posted jobs across the platform</p>
+      </div>
+      <a href="{% url 'jobs:post-job' %}" class="btn-ink">
+        <i class="bi bi-plus-circle"></i> Post a Job
+      </a>
+    </div>
+
+    {% if all_jobs %}
+    <div class="row g-4">
+      {% for job in all_jobs|slice:":9" %}
+      <div class="col-sm-6 col-lg-4">
+        <div class="job-card">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="jc-logo">🏢</div>
+            <div>
+              <div class="jc-title">{{ job.title }}</div>
+              <div class="jc-company">{{ job.company.name }}</div>
+            </div>
+          </div>
+          <div class="jc-meta">
+            <div class="jc-meta-item"><i class="bi bi-geo-alt"></i> {{ job.location }}</div>
+            <div class="jc-meta-item"><i class="bi bi-clock"></i> {{ job.created_at|timesince }} ago</div>
+          </div>
+          <div class="jc-tags"><span class="jc-tag jc-tag-type">{{ job.job_type }}</span></div>
+          <a href="{% url 'jobs:job_detail' job.id %}" class="jc-btn">View Details <i class="bi bi-arrow-right"></i></a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty">
+      <div class="empty-ico">💼</div>
+      <h5>No jobs yet</h5>
+      <p>Post your first job to reach AI-matched candidates instantly.</p>
+    </div>
+    {% endif %}
+
+    <div class="view-all">
+      <a href="{% url 'jobs:job-list' %}" class="view-all-btn">Browse all listings <i class="bi bi-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+
+{% else %}
+<!-- Guest view -->
+<section class="sec-alt">
+  <div class="container">
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-5">
+      <div>
+        <div class="eyebrow"><i class="bi bi-fire"></i> Trending</div>
+        <h2 class="sec-title">Latest Opportunities</h2>
+        <p class="sec-sub">Fresh listings — sign in to apply instantly</p>
+      </div>
+    </div>
+
+    {% if all_jobs %}
+    <div class="row g-4">
+      {% for job in all_jobs|slice:":9" %}
+      <div class="col-sm-6 col-lg-4">
+        <div class="job-card">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="jc-logo">🏢</div>
+            <div>
+              <div class="jc-title">{{ job.title }}</div>
+              <div class="jc-company">{{ job.company.name }}</div>
+            </div>
+          </div>
+          <div class="jc-meta">
+            <div class="jc-meta-item"><i class="bi bi-geo-alt"></i> {{ job.location }}</div>
+            <div class="jc-meta-item"><i class="bi bi-clock"></i> {{ job.created_at|timesince }} ago</div>
+          </div>
+          <div class="jc-tags"><span class="jc-tag jc-tag-type">{{ job.job_type }}</span></div>
+          <a href="{% url 'accounts:login' %}" class="jc-btn">
+            Sign in to Apply <i class="bi bi-box-arrow-in-right"></i>
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty">
+      <div class="empty-ico">💼</div>
+      <h5>Jobs coming soon</h5>
+      <p>Create an account to be notified when new opportunities go live.</p>
+    </div>
+    {% endif %}
+
+    <div class="view-all">
+      <a href="{% url 'jobs:job-list' %}" class="view-all-btn">See all jobs <i class="bi bi-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ════════ FEATURES ════════ -->
+<section class="sec">
+  <div class="container">
+    <div class="text-center mb-5">
+      <div class="eyebrow" style="justify-content:center;"><i class="bi bi-gem"></i> Platform Benefits</div>
+      <h2 class="sec-title">Built to Get You Hired</h2>
+      <p class="sec-sub">Everything you need, nothing you don't</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-sm-6 col-lg-3">
+        <div class="feat-card">
+          <div class="feat-ico ico-blue"><i class="bi bi-cpu" style="color:var(--accent)"></i></div>
+          <div class="feat-title">AI Match Engine</div>
+          <p class="feat-desc">Cosine similarity analysis ranks every job against your real skills — not guesswork.</p>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <div class="feat-card">
+          <div class="feat-ico ico-green"><i class="bi bi-patch-check" style="color:var(--success)"></i></div>
+          <div class="feat-title">Verified Employers</div>
+          <p class="feat-desc">Every company is vetted. Apply with confidence knowing who you're talking to.</p>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <div class="feat-card">
+          <div class="feat-ico ico-stone"><i class="bi bi-file-earmark-person" style="color:var(--ink-soft)"></i></div>
+          <div class="feat-title">Smart CV Parsing</div>
+          <p class="feat-desc">Upload once. Our AI reads your experience and auto-builds your candidate profile.</p>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <div class="feat-card">
+          <div class="feat-ico ico-amber"><i class="bi bi-graph-up-arrow" style="color:var(--warn)"></i></div>
+          <div class="feat-title">Application Tracking</div>
+          <p class="feat-desc">See every application's status at a glance and know where you stand in real time.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ HOW IT WORKS ════════ -->
+{% if not user.is_authenticated or user.is_job_seeker %}
+<section class="sec-alt">
+  <div class="container">
+    <div class="row g-5 align-items-center">
+      <div class="col-lg-4">
+        <div class="eyebrow"><i class="bi bi-map"></i> The Process</div>
+        <h2 class="sec-title">Three steps to your next role</h2>
+        <p class="sec-sub" style="margin-top:8px;">From sign-up to offer — faster than you'd expect.</p>
+        {% if not user.is_authenticated %}
+        <a href="{% url 'accounts:signup' %}" class="btn-ink d-inline-flex mt-4">
+          Start Now <i class="bi bi-arrow-right"></i>
+        </a>
+        {% endif %}
+      </div>
+      <div class="col-lg-7 offset-lg-1">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-label">Create your profile</div>
+            <p class="step-desc">Sign up and upload your CV. The AI instantly parses your skills and experience.</p>
+          </div>
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-label">Receive AI-ranked matches</div>
+            <p class="step-desc">Get a personalised feed of jobs ranked by how well they fit your unique profile.</p>
+          </div>
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-label">Apply with confidence</div>
+            <p class="step-desc">Your match score tells you exactly how strong your application is before you send it.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ════════ CTA ════════ -->
+<section class="cta-wrap">
+  <div class="container">
+    <div class="cta-inner">
+      <div class="cta-tag">
+        <i class="bi bi-rocket-takeoff-fill"></i>
+        {% if user.is_authenticated and user.is_company %}Hire Smarter{% else %}Get Started{% endif %}
+      </div>
+      <h2 class="cta-title">
+        {% if user.is_authenticated and user.is_job_seeker %}
+          Your Next Role is One Upload Away
+        {% elif user.is_authenticated and user.is_company %}
+          Post a Job. Reach the Right People.
+        {% else %}
+          Stop Scrolling. Start Matching.
+        {% endif %}
+      </h2>
+      <p class="cta-sub">
+        {% if user.is_authenticated and user.is_job_seeker %}
+          Complete your profile so AI can surface the roles most likely to say yes to you.
+        {% elif user.is_authenticated and user.is_company %}
+          Post a listing and let our AI surface your ideal candidates automatically.
+        {% else %}
+          Join thousands of professionals finding smarter, faster matches every day.
+        {% endif %}
+      </p>
+      <div class="cta-btns">
+        {% if user.is_authenticated and user.is_job_seeker %}
+          <a href="{% url 'accounts:jobseeker_profile' %}" class="btn-cta-w">
+            <i class="bi bi-person-circle"></i> Complete Profile
+          </a>
+          <a href="{% url 'jobs:job-list' %}" class="btn-cta-g">Browse Jobs</a>
+        {% elif user.is_authenticated and user.is_company %}
+          <a href="{% url 'jobs:post-job' %}" class="btn-cta-w">
+            <i class="bi bi-plus-circle"></i> Post a Job
+          </a>
+        {% else %}
+          <a href="{% url 'accounts:signup' %}" class="btn-cta-w">
+            <i class="bi bi-person-plus"></i> Create Free Account
+          </a>
+          <a href="{% url 'accounts:login' %}" class="btn-cta-g">Sign In</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<script>
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+}
+</script>
 
 {% endblock %}
