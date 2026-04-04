@@ -9,7 +9,11 @@ from jobs.models import Job
 
 # Home page
 def home_view(request):
-    return render(request, 'home.html')
+    jobs = Job.objects.all().order_by('-created_at')[:6]  # latest 6 jobs
+
+    return render(request, 'home.html', {
+        'jobs': jobs,
+    })
 
 # About page
 def about_view(request):

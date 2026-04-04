@@ -1,76 +1,260 @@
 {% extends 'base.html' %}
-
-{% block title %}About Us - Job Hiring System{% endblock %}
+{% load static %}
 
 {% block content %}
-<!-- Header Section -->
-<header class="about-header">
-    <div class="container">
-        <h1>About Job Hiring System</h1>
-        <p class="lead">Connecting Employers and Job Seekers Seamlessly</p>
-    </div>
-</header>
 
-<!-- About Section -->
-<section class="py-5">
+<div class="about-wrapper">
+
+  <!-- ===== HERO ===== -->
+  <section class="about-hero text-center">
     <div class="container">
-        <div class="row align-items-center">
-            <div class="col-md-6">
-                <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=870&q=80" class="img-fluid rounded shadow" alt="About us">
-            </div>
-            <div class="col-md-6">
-                <h2>Our Mission</h2>
-                <p>We aim to simplify the job hiring process by connecting qualified candidates with top companies efficiently and effectively.</p>
-                <h2>Our Vision</h2>
-                <p>To become the most trusted job hiring platform, empowering professionals to find the right opportunities while helping companies discover the best talent.</p>
-            </div>
+      <h1 class="about-title">About This Platform</h1>
+      <p class="about-subtitle">
+        A smart job hiring system that connects job seekers with the right opportunities
+        and helps companies find the best talent — efficiently.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== WHAT IS IT ===== -->
+  <section class="about-section">
+    <div class="container">
+      <div class="row align-items-center g-5">
+
+        <div class="col-md-6">
+          <h2 class="about-heading">What is this system?</h2>
+          <p class="about-text">
+            This is a web-based Job Hiring System built to simplify the recruitment process
+            for both companies and job seekers. Companies can post job openings, manage
+            applications, and find the most suitable candidates — all from one dashboard.
+          </p>
+          <p class="about-text">
+            Job seekers can browse available jobs, apply with their CV, and track their
+            application status in real time. The system uses AI-based skill matching to
+            recommend the most relevant jobs based on the applicant's CV.
+          </p>
         </div>
-    </div>
-</section>
 
-<!-- Team Section -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <h2 class="section-title text-center">Meet Our Team</h2>
-        <div class="row text-center">
-            <div class="col-md-4 team-member mb-4">
-                <img src="https://randomuser.me/api/portraits/men/32.jpg" width="150" class="rounded-circle" alt="Team Member">
-                <h5 class="mt-3">John Doe</h5>
-                <p>CEO & Founder</p>
+        <div class="col-md-6">
+          <div class="about-card">
+            <div class="about-stat">
+              <span class="stat-icon">💼</span>
+              <h4>Post & Manage Jobs</h4>
+              <p>Companies post jobs and manage all incoming applications from a single dashboard.</p>
             </div>
-            <div class="col-md-4 team-member mb-4">
-                <img src="https://randomuser.me/api/portraits/women/44.jpg" width="150" class="rounded-circle" alt="Team Member">
-                <h5 class="mt-3">Jane Smith</h5>
-                <p>CTO</p>
-            </div>
-            <div class="col-md-4 team-member mb-4">
-                <img src="https://randomuser.me/api/portraits/men/56.jpg" width="150" class="rounded-circle" alt="Team Member">
-                <h5 class="mt-3">Mike Johnson</h5>
-                <p>Lead Developer</p>
-            </div>
+          </div>
         </div>
-    </div>
-</section>
-{% endblock %}
 
-{% block extra_css %}
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HOW IT WORKS ===== -->
+  <section class="about-section bg-light-custom">
+    <div class="container">
+      <h2 class="about-heading text-center mb-5">How It Works</h2>
+
+      <div class="row g-4">
+
+        <div class="col-md-4">
+          <div class="step-card">
+            <div class="step-number">01</div>
+            <h5>Create an Account</h5>
+            <p>Register as a Job Seeker or a Company. Each role has its own dedicated dashboard and features.</p>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="step-card">
+            <div class="step-number">02</div>
+            <h5>Post or Browse Jobs</h5>
+            <p>Companies post jobs with required skills and details. Job seekers browse and search available listings.</p>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="step-card">
+            <div class="step-number">03</div>
+            <h5>Apply & Get Matched</h5>
+            <p>Job seekers apply by uploading their CV. The system calculates a match score based on required skills.</p>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="step-card">
+            <div class="step-number">04</div>
+            <h5>Review Applications</h5>
+            <p>Companies review all applicants, view their CVs, check match scores, and filter top candidates.</p>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="step-card">
+            <div class="step-number">05</div>
+            <h5>Accept or Reject</h5>
+            <p>Companies accept or reject applicants directly from their dashboard with a single click.</p>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="step-card">
+            <div class="step-number">06</div>
+            <h5>Track Your Status</h5>
+            <p>Job seekers can monitor all their applications and see whether they are pending, accepted, or rejected.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== BUILT WITH ===== -->
+  <section class="about-section">
+    <div class="container text-center">
+      <h2 class="about-heading mb-4">Built With</h2>
+      <div class="tech-badges">
+        <span class="tech-badge">Django</span>
+        <span class="tech-badge">Python</span>
+        <span class="tech-badge">Bootstrap 5</span>
+        <span class="tech-badge">SQLite</span>
+        <span class="tech-badge">AI Skill Matching</span>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ===== STYLES ===== -->
 <style>
-    .about-header {
-        background: url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1470&q=80') no-repeat center center;
-        background-size: cover;
-        color: white;
-        padding: 120px 0;
-        text-align: center;
-    }
-    .about-header h1 {
-        font-size: 3rem;
-        font-weight: bold;
-    }
-    .team-member img {
-        transition: transform 0.3s;
-    }
-    .team-member img:hover {
-        transform: scale(1.1);
-    }
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Playfair+Display:wght@700&display=swap');
+
+  .about-wrapper {
+    font-family: 'Outfit', sans-serif;
+    color: #1a1a2e;
+  }
+
+  /* Hero */
+  .about-hero {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    padding: 80px 20px;
+    color: #fff;
+  }
+
+  .about-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .about-subtitle {
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    opacity: 0.9;
+    line-height: 1.8;
+  }
+
+  /* Sections */
+  .about-section {
+    padding: 70px 0;
+  }
+
+  .bg-light-custom {
+    background: #f4f6fb;
+  }
+
+  .about-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #1a1a2e;
+  }
+
+  .about-text {
+    font-size: 0.98rem;
+    color: #4b5563;
+    line-height: 1.9;
+    margin-bottom: 1rem;
+  }
+
+  /* About card */
+  .about-card {
+    background: #fff;
+    border-radius: 16px;
+    border-left: 4px solid #4f46e5;
+    padding: 30px;
+    box-shadow: 0 8px 24px rgba(79, 70, 229, 0.1);
+    text-align: center;
+  }
+
+  .stat-icon {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .about-card h4 {
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .about-card p {
+    color: #6b7280;
+    font-size: 0.93rem;
+  }
+
+  /* Step cards */
+  .step-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 28px 24px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    height: 100%;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .step-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(79, 70, 229, 0.12);
+  }
+
+  .step-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #4f46e5;
+    margin-bottom: 10px;
+  }
+
+  .step-card h5 {
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #1a1a2e;
+  }
+
+  .step-card p {
+    color: #6b7280;
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  /* Tech badges */
+  .tech-badges {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .tech-badge {
+    background: #ede9fe;
+    color: #4f46e5;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
 </style>
+
 {% endblock %}

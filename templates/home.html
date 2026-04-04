@@ -286,7 +286,8 @@ html,body{
 /* ===== JOB CARDS ===== */
 .jobs-section {
     font-family: 'Outfit', sans-serif;
-    background: #f9f9f9;
+    background: #f4f6fb;
+    padding: 60px 0;
 }
 
 .jobs-section .section-title {
@@ -294,39 +295,56 @@ html,body{
     font-weight: 700;
     font-size: 2rem;
     text-align: center;
-    margin-bottom: 2rem;
+    color: #1a1a2e;
 }
 
 .job-card {
     border: none;
-    border-radius: 12px;
-    transition: transform 0.2s, box-shadow 0.2s;
-    display: flex;
-    flex-direction: column;
+    border-radius: 16px;
+    background: #ffffff;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    border-left: 4px solid #4f46e5;
 }
 
 .job-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(79, 70, 229, 0.15);
 }
 
 .job-card .card-title {
-    font-weight: 600;
-    font-size: 1.25rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #1a1a2e;
 }
 
 .job-card .card-subtitle {
-    font-size: 0.95rem;
+    font-size: 0.88rem;
+    color: #6b7280;
+}
+
+.job-card .card-text {
+    font-size: 0.9rem;
+    color: #4b5563;
+    line-height: 1.7;
 }
 
 .job-card .badge {
-    margin-top: 0.5rem;
-    font-size: 0.85rem;
+    font-size: 0.78rem;
+    padding: 5px 10px;
+    border-radius: 20px;
 }
 
-.job-card .btn {
+.job-card .btn-outline-primary {
     border-radius: 8px;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-color: #4f46e5;
+    color: #4f46e5;
+}
+
+.job-card .btn-outline-primary:hover {
+    background: #4f46e5;
+    color: #fff;
 }
 
 /* ===== SECTION SPACING ===== */
@@ -641,7 +659,7 @@ html,body{
             {% endif %}
 
             <div class="mt-auto pt-3">
-              <a href="{% url 'job_detail' job.id %}" class="btn btn-outline-primary w-100">View Details</a>
+              <a href="{% url 'jobs:job_detail' job.id %}" class="btn btn-outline-primary w-100">View Details</a>
             </div>
           </div>
         </div>

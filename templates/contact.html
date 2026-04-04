@@ -1,63 +1,158 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block content %}
-<style>
-  body {
-    background: #f5f7fb;
-  }
 
-  .contact-card {
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-  }
+<div class="contact-wrapper">
 
-  .contact-info {
-    background: linear-gradient(135deg, #0d6efd, #0b5ed7);
-    color: #fff;
-    border-radius: 15px 0 0 15px;
-  }
+  <!-- ===== HERO ===== -->
+  <section class="contact-hero text-center">
+    <div class="container">
+      <h1 class="contact-title">Get In Touch</h1>
+      <p class="contact-subtitle">
+        Have any questions or feedback? We're here to help.
+      </p>
+    </div>
+  </section>
 
-  .contact-info h3 {
-    font-weight: 600;
-  }
+  <!-- ===== CONTACT SECTION ===== -->
+  <section class="contact-section">
+    <div class="container">
+      <div class="row g-5 justify-content-center">
 
-  .form-control {
-    border-radius: 10px;
-  }
+        <!-- ===== CONTACT INFO ===== -->
+        <div class="col-md-5">
+          <h2 class="contact-heading">Contact Information</h2>
+          <p class="contact-subtext">
+            Reach out to us through any of the channels below.
+            We typically respond within 24 hours.
+          </p>
 
-  .btn-custom {
-    border-radius: 10px;
-    padding: 10px;
-    font-weight: 500;
-  }
-</style>
-
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-10">
-      <div class="card contact-card border-0">
-        <div class="row g-0">
-
-          <!-- Contact Info -->
-          <div class="col-md-5 contact-info p-4 d-flex flex-column justify-content-center">
-            <h3>Get in Touch</h3>
-            <p class="mt-3">
-              Have any questions? We're here to help.
-            </p>
-            <p class="mt-4 mb-1"><strong>Email:</strong> support@example.com</p>
-            <p class="mb-1"><strong>Phone:</strong> +977-98XXXXXXXX</p>
-            <p><strong>Location:</strong> Kathmandu, Nepal</p>
+          <div class="info-item">
+            <div class="info-icon">📧</div>
+            <div>
+              <h6>Email Address</h6>
+              <p>support@jobhiringsystem.com</p>
+            </div>
           </div>
 
-          
-           
+          <div class="info-item">
+            <div class="info-icon">📞</div>
+            <div>
+              <h6>Phone Number</h6>
+              <p>+977-9800000000</p>
+            </div>
+          </div>
 
+          <div class="info-item">
+            <div class="info-icon">📍</div>
+            <div>
+              <h6>Address</h6>
+              <p>Kathmandu-44600, Bagmati Province, Nepal</p>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-icon">🕐</div>
+            <div>
+              <h6>Working Hours</h6>
+              <p>Available 24/7</p>
+            </div>
           </div>
 
         </div>
+
+        
+
       </div>
     </div>
-  </div>
+  </section>
+
 </div>
+
+<!-- ===== STYLES ===== -->
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Playfair+Display:wght@700&display=swap');
+
+  .contact-wrapper {
+    font-family: 'Outfit', sans-serif;
+    color: #1a1a2e;
+  }
+
+  /* Hero */
+  .contact-hero {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    padding: 80px 20px;
+    color: #fff;
+  }
+
+  .contact-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .contact-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  /* Section */
+  .contact-section {
+    padding: 70px 0;
+    background: #f4f6fb;
+  }
+
+  .contact-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1a1a2e;
+  }
+
+  .contact-subtext {
+    color: #6b7280;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }
+
+  /* Info items */
+  .info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+    background: #fff;
+    padding: 16px 20px;
+    border-radius: 12px;
+    border-left: 4px solid #4f46e5;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+
+  .info-icon {
+    font-size: 1.6rem;
+    min-width: 40px;
+    text-align: center;
+  }
+
+  .info-item h6 {
+    font-weight: 700;
+    margin-bottom: 2px;
+    color: #1a1a2e;
+    font-size: 0.9rem;
+  }
+
+  .info-item p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 0.92rem;
+  }
+
+
+</style>
+
 {% endblock %}
